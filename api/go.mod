@@ -1,3 +1,3 @@
-module cs4520.com/final
+module brainflex.com/api
 
 go 1.21.3
