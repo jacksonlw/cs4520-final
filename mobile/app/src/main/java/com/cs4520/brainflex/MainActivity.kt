@@ -18,13 +18,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lateinit var logInViewModel: LogInViewModel
-        logInViewModel = ViewModelProvider(this).get(LogInViewModel::class.java)
+       // logInViewModel = ViewModelProvider(this).get(LogInViewModel::class.java)
         setContent {
             BrainFlexTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    AppNavHost(loginVieModel = logInViewModel, navController = rememberNavController())
+                    AppNavHost(
+//                        loginVieModel = logInViewModel,
+                        navController = rememberNavController())
                 }
             }
         }
