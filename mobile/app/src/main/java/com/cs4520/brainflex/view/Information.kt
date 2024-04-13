@@ -31,8 +31,19 @@ fun InformationScreen(
 //            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 30.dp)
+                .padding(20.dp)
         ){
+            Title()
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp)
+            ){
+                HowToPlay()
+                GameDemo()
+                AdditionalInfo()
+            }
         }
     }
 }
@@ -47,26 +58,23 @@ fun Title(){
             )
             .padding(10.dp)
             .fillMaxWidth(),
-        style = MaterialTheme.typography.h5)
+        style = MaterialTheme.typography.subtitle1)
 }
 
 @Composable
 fun HowToPlay(){
     Column(){
-        Text(text = "How To Play", style = MaterialTheme.typography.h6)
-        Spacer(modifier = Modifier.height(10.dp))
+        Text(text = "How To Play", style = MaterialTheme.typography.caption)
+        Spacer(modifier = Modifier.height(5.dp))
         Text(text = "1. Memorize the sequence of buttons that light up\n" +
                 "2. Press the buttons in order\n\n" +
-                "The sequence gets longer as you complete each pattern \n" +
-                "\n" +
-                "If you fail to complete the pattern, the test will fail.\n",
-            style = MaterialTheme.typography.subtitle1)
+                "The sequence gets longer as you complete each pattern. If you fail to complete the pattern, the test will fail.\n",
+            style = MaterialTheme.typography.caption)
     }
 }
 
 @Composable
 fun GameDemo() {
-
 }
 @Composable
 fun AdditionalInfo(){
@@ -80,7 +88,7 @@ fun AdditionalInfo(){
                 )
                 .padding(10.dp)
                 .fillMaxWidth(),
-            style = MaterialTheme.typography.h6)
+            style = MaterialTheme.typography.caption)
 
         Text(text = "The Sequence Memory Test measures working memory capacity along with cognitive processing speed and attention.\n\n" +
                 "The average score for beginners are around 0-32 while the experts score range from 32-160.\n",
@@ -91,7 +99,7 @@ fun AdditionalInfo(){
                 )
                 .padding(10.dp)
                 .fillMaxWidth(),
-            style = MaterialTheme.typography.subtitle1)
+            style = MaterialTheme.typography.caption)
     }
 }
 

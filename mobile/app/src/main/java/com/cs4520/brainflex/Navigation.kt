@@ -30,7 +30,7 @@ sealed class NavigationItem(val route: String) {
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: String = NavigationItem.LOGIN.route,
+    startDestination: String = NavigationItem.INFORMATION.route,
 //    loginVieModel: LogInViewModel
 ) {
     NavHost( modifier = modifier, navController =  navController, startDestination = startDestination ) {
