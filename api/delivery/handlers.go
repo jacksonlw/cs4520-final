@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"brainflex.com/api/config"
 	"brainflex.com/api/domain"
@@ -44,7 +45,6 @@ func (h handlers) loginHandler(w http.ResponseWriter, r *http.Request) {
 
 		err = h.repo.InsertUser(req.Username)
 		if err != nil {
-			fmt.Println(err)
 			http.Error(w, "error inserting user", http.StatusInternalServerError)
 			return
 		}
@@ -58,7 +58,48 @@ func (h handlers) loginHandler(w http.ResponseWriter, r *http.Request) {
 
 func (h handlers) leaderboardHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
+		q := r.URL.Query().Get("limit")
+		l, err := getLimitFromQuery(q)
+		if err != nil {
+			httpBadRequest(w, err.Error())
+			return
+		}
+
+		q = r.URL.Query().Get("offset")
+		o, err := getOffsetFromQuery(q)
+		if err != nil {
+			httpBadRequest(w, err.Error())
+			return
+		}
+
+		fmt.Println(*l, *o)
+
+		scores, err := h.repo.GetScores(*l, *o)
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, "error getting scores", http.StatusInternalServerError)
+			return
+		}
+
+		total, err := h.repo.CountScores()
+		if err != nil {
+			http.Error(w, "error getting total scores", http.StatusInternalServerError)
+			return
+		}
+
+		res := dto.LeaderboardResponse{
+			Scores: scores,
+			Limit:  *l,
+			Offset: *o,
+			Total:  total,
+		}
+
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
+
+		if err := json.NewEncoder(w).Encode(res); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 		return
 	}
 
@@ -76,9 +117,49 @@ func (h handlers) leaderboardHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		w.WriteHeader(http.StatusOK)
+		err = h.repo.InsertScore(req.Username, *req.Score)
+		if err != nil {
+			http.Error(w, "error inserting score", http.StatusInternalServerError)
+			return
+		}
+
+		w.WriteHeader(http.StatusCreated)
 		return
 	}
 
 	httpMethodNotAllowed(w)
+}
+
+func getLimitFromQuery(q string) (*int, error) {
+	if q == "" {
+		l := domain.DEFAULT_LIMIT
+		return &l, nil
+	}
+
+	l, err := strconv.Atoi(q)
+	if err != nil {
+		return nil, fmt.Errorf("invalid limit: must be an integer")
+	}
+	if l <= 0 {
+		return nil, fmt.Errorf("limit must be greater than 0")
+	}
+
+	return &l, nil
+}
+
+func getOffsetFromQuery(q string) (*int, error) {
+	if q == "" {
+		o := domain.DEFAULT_OFFSET
+		return &o, nil
+	}
+
+	o, err := strconv.Atoi(q)
+	if err != nil {
+		return nil, fmt.Errorf("invalid offset: must be an integer")
+	}
+	if o < 0 {
+		return nil, fmt.Errorf("offset must be greater than or equal to 0")
+	}
+
+	return &o, nil
 }
