@@ -58,21 +58,17 @@ func (h handlers) loginHandler(w http.ResponseWriter, r *http.Request) {
 
 func (h handlers) leaderboardHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		q := r.URL.Query().Get("limit")
-		l, err := getLimitFromQuery(q)
+		l, err := getLimitFromRequest(r)
 		if err != nil {
 			httpBadRequest(w, err.Error())
 			return
 		}
 
-		q = r.URL.Query().Get("offset")
-		o, err := getOffsetFromQuery(q)
+		o, err := getOffsetFromRequest(r)
 		if err != nil {
 			httpBadRequest(w, err.Error())
 			return
 		}
-
-		fmt.Println(*l, *o)
 
 		scores, err := h.repo.GetScores(*l, *o)
 		if err != nil {
@@ -100,37 +96,34 @@ func (h handlers) leaderboardHandler(w http.ResponseWriter, r *http.Request) {
 		if err := json.NewEncoder(w).Encode(res); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		return
-	}
-
-	if r.Method == "POST" {
+	} else if r.Method == "POST" {
 		var req dto.LeaderboardRequest
-
-		err := json.NewDecoder(r.Body).Decode(&req)
-		if err != nil {
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, "invalid request body", http.StatusBadRequest)
 			return
 		}
 
-		if err = validateLeaderboardRequest(req); err != nil {
+		if err := validateLeaderboardRequest(req); err != nil {
 			httpBadRequest(w, err.Error())
 			return
 		}
 
-		err = h.repo.InsertScore(req.Username, *req.Score)
+		err := h.repo.InsertScore(req.Username, *req.Score)
 		if err != nil {
 			http.Error(w, "error inserting score", http.StatusInternalServerError)
 			return
 		}
 
 		w.WriteHeader(http.StatusCreated)
-		return
+	} else {
+		httpMethodNotAllowed(w)
 	}
 
-	httpMethodNotAllowed(w)
 }
 
-func getLimitFromQuery(q string) (*int, error) {
+func getLimitFromRequest(r *http.Request) (*int, error) {
+	q := r.URL.Query().Get("limit")
+
 	if q == "" {
 		l := domain.DEFAULT_LIMIT
 		return &l, nil
@@ -147,7 +140,9 @@ func getLimitFromQuery(q string) (*int, error) {
 	return &l, nil
 }
 
-func getOffsetFromQuery(q string) (*int, error) {
+func getOffsetFromRequest(r *http.Request) (*int, error) {
+	q := r.URL.Query().Get("offset")
+
 	if q == "" {
 		o := domain.DEFAULT_OFFSET
 		return &o, nil
