@@ -19,7 +19,7 @@ sealed class NavigationItem(val route: String) {
     object LOGIN : NavigationItem(Screen.LOGIN.name)
     object GAMESTART : NavigationItem(Screen.GAMESTART.name)
 
-    object GAME : NavigationItem(Screen.INFORMATION.name)
+    object GAME : NavigationItem(Screen.GAME.name)
 
     object INFORMATION : NavigationItem(Screen.INFORMATION.name)
     object LEADERBOARD: NavigationItem(Screen.LEADERBOARD.name)
@@ -30,7 +30,8 @@ fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String = NavigationItem.LOGIN.route,
-//    loginVieModel: LogInViewModel
+//    loginVieModel: LogInViewModel,
+    gameViewModel: GameViewModel,
 ) {
     NavHost( modifier = modifier, navController =  navController, startDestination = startDestination ) {
         composable(NavigationItem.LOGIN.route) {
@@ -40,7 +41,7 @@ fun AppNavHost(
             GameStartScreen(navController)
         }
         composable(NavigationItem.GAME.route) {
-//            GameStartScreen(navController)
+            GameScreen(gameViewModel, navController)
         }
         composable(NavigationItem.INFORMATION.route) {
 //            GameStartScreen(navController)

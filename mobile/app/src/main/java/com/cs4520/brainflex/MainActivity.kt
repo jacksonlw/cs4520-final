@@ -19,6 +19,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         lateinit var logInViewModel: LogInViewModel
        // logInViewModel = ViewModelProvider(this).get(LogInViewModel::class.java)
+        lateinit var gameViewModel: GameViewModel
+        gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
         setContent {
             BrainFlexTheme {
                 Surface(
@@ -26,6 +28,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     AppNavHost(
 //                        loginVieModel = logInViewModel,
+                        gameViewModel = gameViewModel,
                         navController = rememberNavController())
                 }
             }
