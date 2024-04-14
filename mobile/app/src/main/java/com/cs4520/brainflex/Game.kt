@@ -1,6 +1,9 @@
 package com.cs4520.brainflex
 
+import android.util.Log
 import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector4D
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,8 +38,8 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun GameScreen(viewModel: GameViewModel, navHostController: NavHostController,) {
-    // Score = level
-    val currentScore by viewModel.currentScore.observeAsState(0)
+
+    val currentLevel by viewModel.currentLevel.observeAsState(1)
     val sequence by viewModel.sequence.observeAsState(listOf<Int>())
     val gameState by viewModel.gameState.observeAsState(GameState.IN_PROGRESS)
 
@@ -43,12 +47,13 @@ fun GameScreen(viewModel: GameViewModel, navHostController: NavHostController,) 
     if (gameState == GameState.GAME_OVER) {
         navHostController.navigate(Screen.LOGIN.name)
     }
+    Log.d("SEQUENCE", sequence.toString())
     Surface( color = MaterialTheme.colors.background) {
         Column (horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(30.dp)){
-            Level(gameState, currentScore)
+            Level(gameState, currentLevel)
             Spacer(modifier = Modifier.height(20.dp))
             MemorySequenceGame(viewModel, sequence)
         }
@@ -59,26 +64,31 @@ fun Level(gameState: GameState, currentScore: Int) {
     Text("LEVEL " + currentScore, color = MaterialTheme.colors.primary, fontSize = 20.sp) 
 }
 @Composable
-fun BlinkingCard(viewModel: GameViewModel, index: Int) {
+fun BlinkingCard(viewModel: GameViewModel, index: Int, delay: Long) {
+
     val blue = MaterialTheme.colors.onBackground
     val color = remember { Animatable(blue) }
 
     LaunchedEffect(Unit) {
         color.animateTo(
             targetValue = Color.White,
-            animationSpec = tween(durationMillis = 3000)
+            animationSpec = tween(durationMillis = 2000)
         )
         color.animateTo(
             targetValue = blue,
-            animationSpec = tween(durationMillis = 3000)
+            animationSpec = tween(durationMillis = 2000)
         )
+        if (delay > 0){
+            kotlinx.coroutines.delay(delay)
+        }
+
     }
     Card(
         modifier = Modifier
             .size(80.dp)
             .padding(5.dp)
-            .background(color.value)
-            .clickable{ viewModel.nextStep(index) }
+            .clickable{ viewModel.nextStep(index) },
+        backgroundColor = color.value
     ){}
 }
 
@@ -87,8 +97,8 @@ fun NormalCard(viewModel: GameViewModel, index: Int) {
     Card( modifier = Modifier
         .size(80.dp)
         .padding(5.dp)
-        .background(MaterialTheme.colors.background)
-        .clickable{ viewModel.nextStep(index) }){}
+        .clickable{ viewModel.nextStep(index) },
+        backgroundColor = MaterialTheme.colors.onBackground){}
 }
 
 @Composable
@@ -110,7 +120,7 @@ fun MemorySequenceGame(viewModel: GameViewModel, data: List<Int>) {
                     // 3 4 5
                     // 6 7 8
                     // SO if "data" contains it, the cell should blink:
-                    BlinkingCard(viewModel, index)
+                    BlinkingCard(viewModel, index, index * 5L)
                 } else {
                     NormalCard(viewModel, index)
                 }
