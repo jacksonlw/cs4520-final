@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.cs4520.brainflex.ui.theme.BrainFlexTheme
 import androidx.compose.ui.unit.sp
+import com.cs4520.brainflex.dao.AppDatabase
 
 
 @Composable
