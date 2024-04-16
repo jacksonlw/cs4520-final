@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.cs4520.brainflex.view.InformationScreen
 
 
 enum class Screen {
@@ -43,7 +44,7 @@ fun AppNavHost(
 //            GameStartScreen(navController)
         }
         composable(NavigationItem.INFORMATION.route) {
-//            GameStartScreen(navController)
+            InformationScreen(navController)
         }
     }
 
