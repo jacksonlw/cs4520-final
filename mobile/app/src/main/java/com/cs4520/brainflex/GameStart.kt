@@ -19,10 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
 @Composable
-fun GameStartScreen (
+fun GameStartScreen(
     navHostController: NavHostController,
 ) {
-    Surface ( color = MaterialTheme.colors.background ) {
+    Surface(color = MaterialTheme.colors.background) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,13 +44,16 @@ fun StartBtn(
         onClick = {
             navHostController.navigate(Screen.GAME.name)
         },
-        colors = ButtonDefaults.buttonColors(disabledBackgroundColor= MaterialTheme.colors.primary,
-            backgroundColor = MaterialTheme.colors.primary),
+        colors = ButtonDefaults.buttonColors(
+            disabledBackgroundColor = MaterialTheme.colors.primary,
+            backgroundColor = MaterialTheme.colors.primary
+        ),
         shape = RoundedCornerShape(5.dp),
     ) {
         Text("START", color = Color.Black)
     }
 }
+
 @Composable
 fun RulesBtn(
     navHostController: NavHostController
@@ -59,8 +62,10 @@ fun RulesBtn(
         onClick = {
             navHostController.navigate(Screen.INFORMATION.name)
         },
-        colors = ButtonDefaults.buttonColors(disabledBackgroundColor= MaterialTheme.colors.primary,
-            backgroundColor = MaterialTheme.colors.primary),
+        colors = ButtonDefaults.buttonColors(
+            disabledBackgroundColor = MaterialTheme.colors.primary,
+            backgroundColor = MaterialTheme.colors.primary
+        ),
         shape = RoundedCornerShape(5.dp),
     ) {
         Text("RULES", color = Color.Black)
@@ -69,8 +74,8 @@ fun RulesBtn(
 
 @Preview
 @Composable
-fun GameStartPreview(){
-    Surface ( color = MaterialTheme.colors.background ) {
+fun GameStartPreview() {
+    Surface(color = MaterialTheme.colors.background) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -80,16 +85,20 @@ fun GameStartPreview(){
         ) {
             Button(
                 onClick = { },
-                colors = ButtonDefaults.buttonColors(disabledBackgroundColor= MaterialTheme.colors.primary,
-                    backgroundColor = MaterialTheme.colors.primary),
+                colors = ButtonDefaults.buttonColors(
+                    disabledBackgroundColor = MaterialTheme.colors.primary,
+                    backgroundColor = MaterialTheme.colors.primary
+                ),
                 shape = RoundedCornerShape(5.dp),
             ) {
                 Text("START", color = Color.Black)
             }
             Button(
                 onClick = { },
-                colors = ButtonDefaults.buttonColors(disabledBackgroundColor= MaterialTheme.colors.primary,
-                    backgroundColor = MaterialTheme.colors.primary),
+                colors = ButtonDefaults.buttonColors(
+                    disabledBackgroundColor = MaterialTheme.colors.primary,
+                    backgroundColor = MaterialTheme.colors.primary
+                ),
                 shape = RoundedCornerShape(5.dp),
             ) {
                 Text("RULES", color = Color.Black)
