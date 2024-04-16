@@ -66,7 +66,7 @@ fun Title(){
             )
             .padding(10.dp)
             .fillMaxWidth(),
-        style = MaterialTheme.typography.subtitle1)
+        style = MaterialTheme.typography.subtitle1, color = MaterialTheme.colors.primary)
 }
 
 @Composable
@@ -137,7 +137,7 @@ fun AdditionalInfo(){
                 )
                 .padding(10.dp)
                 .fillMaxWidth(),
-            style = MaterialTheme.typography.caption)
+            style = MaterialTheme.typography.caption, color = MaterialTheme.colors.primary)
     }
 }
 
