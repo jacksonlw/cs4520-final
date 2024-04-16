@@ -1,0 +1,29 @@
+package com.cs4520.brainflex.api
+
+import com.cs4520.brainflex.api.requests.LoginRequestBody
+import com.cs4520.brainflex.api.requests.ScoreRequestBody
+import com.cs4520.brainflex.dto.Leaderboard
+import com.cs4520.brainflex.dto.User
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.POST
+
+interface ApiClient {
+    @GET("leaderboard")
+    suspend fun getLeaderboard(): Response<Leaderboard>
+
+    @Headers("Content-Type: application/json")
+    @POST("login")
+    suspend fun login(@Body body: LoginRequestBody): Response<Unit>
+
+
+    @Headers("Content-Type: application/json")
+    @POST("leaderboard")
+    suspend fun addScoreToLeaderboard(@Body body: ScoreRequestBody): Response<Unit>
+}
+
+
+
+

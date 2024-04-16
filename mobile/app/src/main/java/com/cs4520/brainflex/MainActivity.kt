@@ -12,21 +12,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
+import com.cs4520.brainflex.api.ApiFactory
 import com.cs4520.brainflex.ui.theme.BrainFlexTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lateinit var logInViewModel: LogInViewModel
-       // logInViewModel = ViewModelProvider(this).get(LogInViewModel::class.java)
+
+        val apiClient = ApiFactory().create()
+        val logInViewModel: LogInViewModel = ViewModelProvider(this, factory = LogInViewModelFactory(apiClient))[LogInViewModel::class.java]
+
         setContent {
             BrainFlexTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     AppNavHost(
-//                        loginVieModel = logInViewModel,
-                        navController = rememberNavController())
+                        navController = rememberNavController(),
+                        logInViewModel = logInViewModel
+                    )
                 }
             }
         }
