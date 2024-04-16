@@ -27,7 +27,7 @@ func main() {
 	handlers := delivery.NewHandlers(cfg, repo)
 	handlers.MapHandlers(mux)
 
-	fmt.Println("Server is running on port 80")
-	err = http.ListenAndServe(":80", mux)
+	fmt.Println("Server is running on port 8080")
+	err = http.ListenAndServe(":8080", mux)
 	log.Fatal(err)
 }
