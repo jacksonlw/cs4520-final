@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cs4520.brainflex.api.ApiClient
 
-class LogInViewModelFactory (
+class LogInViewModelFactory(
     private val apiClient: ApiClient
-): ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LogInViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

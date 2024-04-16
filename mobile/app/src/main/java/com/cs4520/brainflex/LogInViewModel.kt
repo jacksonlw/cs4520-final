@@ -1,4 +1,5 @@
 package com.cs4520.brainflex
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cs4520.brainflex.api.ApiClient
@@ -18,7 +19,7 @@ class LogInViewModel(private val apiClient: ApiClient) : ViewModel() {
             withContext(Dispatchers.IO) {
                 val body = LoginRequestBody(username)
                 val res = apiClient.login(body)
-                if(res.isSuccessful) {
+                if (res.isSuccessful) {
                     _loginResponseEvent.tryEmit(true)
                 } else {
                     _loginResponseEvent.tryEmit(false)
