@@ -143,7 +143,7 @@ fun LogInPreview() {
                     .fillMaxSize()
                     .padding(horizontal = 30.dp)
             ) {
-                var credentials by remember { mutableStateOf(User()) }
+                var username by remember { mutableStateOf("") }
                 Text(
                     text = "LOGIN", modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colors.primary, style = MaterialTheme.typography.h3
@@ -154,8 +154,8 @@ fun LogInPreview() {
                 )
                 Spacer(modifier = Modifier.height(60.dp))
                 LoginField(
-                    value = credentials.username,
-                    onChange = { credentials = credentials.copy(username = it) },
+                    value = username,
+                    onChange = { username = it },
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Button(
@@ -165,7 +165,7 @@ fun LogInPreview() {
                         backgroundColor = MaterialTheme.colors.background
                     ),
                     modifier = Modifier.align(Alignment.End),
-                    enabled = credentials.isNotEmpty(),
+                    enabled = username.isNotEmpty(),
                     shape = RoundedCornerShape(5.dp),
                 ) {
                     Text("Continue", color = MaterialTheme.colors.primary)
