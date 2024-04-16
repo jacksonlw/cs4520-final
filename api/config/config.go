@@ -1,7 +1,6 @@
 package config
 
 import (
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -21,8 +20,7 @@ func New() Config {
 
 func loadEnvOrPanic() {
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
-		panic(err)
+		panic("Error loading .env file: " + err.Error())
 	}
 }
 
