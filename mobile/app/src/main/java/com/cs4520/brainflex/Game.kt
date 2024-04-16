@@ -1,8 +1,6 @@
 package com.cs4520.brainflex
 
-import android.util.Log
 import androidx.compose.animation.Animatable
-import androidx.compose.animation.core.isFinished
 import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,21 +42,24 @@ fun GameScreen(viewModel: GameViewModel, navHostController: NavHostController) {
         viewModel.startNewGame(currentLevel)
     }
 
-    Surface( color = MaterialTheme.colors.background) {
-            Column (horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(30.dp)){
-                Level(gameState, currentLevel)
-                Spacer(modifier = Modifier.height(20.dp))
-                MemorySequenceGame(viewModel, sequence, gameState, navHostController)
-            }
+    Surface(color = MaterialTheme.colors.background) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(30.dp)
+        ) {
+            Level(gameState, currentLevel)
+            Spacer(modifier = Modifier.height(20.dp))
+            MemorySequenceGame(viewModel, sequence, gameState, navHostController)
+        }
 
     }
 }
+
 @Composable
-fun Level(gameState: GameState, currentScore: Int) { 
-    Text("LEVEL " + currentScore, color = MaterialTheme.colors.primary, fontSize = 20.sp) 
+fun Level(gameState: GameState, currentScore: Int) {
+    Text("LEVEL " + currentScore, color = MaterialTheme.colors.primary, fontSize = 20.sp)
 }
 
 
@@ -79,7 +80,7 @@ fun MemorySequenceGame(
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        if(isDone) {
+        if (isDone) {
             Text(
                 "Tap!", color = MaterialTheme.colors.primary,
                 fontSize = 12.sp, textAlign = TextAlign.Center

@@ -6,21 +6,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
-import androidx.work.WorkManager
-import kotlin.math.exp
 import kotlin.random.Random
 
 enum class GameState {
     IN_PROGRESS,
     GAME_OVER
 }
+
 class GameViewModel() : ViewModel() {
 
     // repository to send score
     private var _currentLevel = MutableLiveData<Int>(1)
     val currentLevel: LiveData<Int> = _currentLevel
 
-    private val _sequence = MutableLiveData<List<Int>>(currentLevel.value?.let { generateSequence(it) })
+    private val _sequence =
+        MutableLiveData<List<Int>>(currentLevel.value?.let { generateSequence(it) })
     val sequence: LiveData<List<Int>> = _sequence
 
     private val _gameState = MutableLiveData<GameState>(GameState.IN_PROGRESS)
@@ -44,7 +44,7 @@ class GameViewModel() : ViewModel() {
     }
 
     fun nextStep(cellNumber: Int, navHostController: NavHostController) {
-        if(cellNumber == (sequence.value?.get(expectedIndex) ?: Infinity)){
+        if (cellNumber == (sequence.value?.get(expectedIndex) ?: Infinity)) {
             Log.d("AM I HERE", sequence.value?.get(expectedIndex).toString())
 
             // if this is the last digit in the sequence
@@ -69,7 +69,7 @@ class GameViewModel() : ViewModel() {
                 expectedIndex++
             }
             // if the user clicked the wrong button
-        }  else {
+        } else {
             Log.d("GAME OVER", "GAME OVER")
             _currentLevel.value = 1
             _sequence.value = currentLevel.value?.let { generateSequence(it) }

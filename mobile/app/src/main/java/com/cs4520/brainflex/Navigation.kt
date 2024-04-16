@@ -3,9 +3,9 @@ package com.cs4520.brainflex
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.cs4520.brainflex.view.InformationScreen
 
 
 enum class Screen {
@@ -15,6 +15,7 @@ enum class Screen {
     INFORMATION,
     LEADERBOARD,
 }
+
 sealed class NavigationItem(val route: String) {
     object LOGIN : NavigationItem(Screen.LOGIN.name)
     object GAMESTART : NavigationItem(Screen.GAMESTART.name)
@@ -22,7 +23,7 @@ sealed class NavigationItem(val route: String) {
     object GAME : NavigationItem(Screen.GAME.name)
 
     object INFORMATION : NavigationItem(Screen.INFORMATION.name)
-    object LEADERBOARD: NavigationItem(Screen.LEADERBOARD.name)
+    object LEADERBOARD : NavigationItem(Screen.LEADERBOARD.name)
 }
 
 @Composable
@@ -30,12 +31,16 @@ fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String = NavigationItem.LOGIN.route,
-//    loginVieModel: LogInViewModel,
     gameViewModel: GameViewModel,
+    logInViewModel: LogInViewModel
 ) {
-    NavHost( modifier = modifier, navController =  navController, startDestination = startDestination ) {
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = startDestination
+    ) {
         composable(NavigationItem.LOGIN.route) {
-            LogInScreen(navController)
+            LogInScreen(logInViewModel, navController)
         }
         composable(NavigationItem.GAMESTART.route) {
             GameStartScreen(navController)
@@ -44,7 +49,7 @@ fun AppNavHost(
             GameScreen(gameViewModel, navController)
         }
         composable(NavigationItem.INFORMATION.route) {
-//            GameStartScreen(navController)
+            InformationScreen(navController)
         }
     }
 
