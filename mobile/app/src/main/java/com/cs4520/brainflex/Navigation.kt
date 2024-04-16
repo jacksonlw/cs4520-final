@@ -30,11 +30,11 @@ fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String = NavigationItem.LOGIN.route,
-//    loginVieModel: LogInViewModel
+    logInViewModel: LogInViewModel
 ) {
     NavHost( modifier = modifier, navController =  navController, startDestination = startDestination ) {
         composable(NavigationItem.LOGIN.route) {
-            LogInScreen(navController)
+            LogInScreen(logInViewModel, navController)
         }
         composable(NavigationItem.GAMESTART.route) {
             GameStartScreen(navController)

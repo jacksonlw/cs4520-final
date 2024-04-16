@@ -51,7 +51,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun LogInScreen (
-//    viewModel: LogInViewModel,
+    viewModel: LogInViewModel,
     navHostController: NavHostController,
 ) {
     Surface ( color = MaterialTheme.colors.secondary ) {
@@ -63,28 +63,29 @@ fun LogInScreen (
                 .padding(horizontal = 30.dp)
         ) {
             val context = LocalContext.current
-            var credentials by remember { mutableStateOf(User()) }
+            var username by remember { mutableStateOf("") }
             Text(text="LOGIN", modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colors.primary, style = MaterialTheme.typography.h4)
             Text("Please sign in to continue",  modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colors.primary, style = MaterialTheme.typography.subtitle1)
             Spacer(modifier = Modifier.height(40.dp))
+
             LoginField(
-                value = credentials.username,
-                onChange = { credentials = credentials.copy(username = it) },
+                value = username,
+                onChange = { username = it },
             )
             Spacer(modifier = Modifier.height(10.dp))
+
             Button(
                 onClick = {
-                    if (checkCredentials(credentials, context)) {
+                    viewModel.login(username)
                         Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
                         navHostController.navigate(Screen.GAMESTART.name)
-                    }
                 },
                 colors = ButtonDefaults.buttonColors(disabledBackgroundColor= MaterialTheme.colors.background,
                     backgroundColor = MaterialTheme.colors.background),
                 modifier = Modifier.align(Alignment.End),
-                enabled = credentials.isNotEmpty(),
+                enabled = username.isNotEmpty(),
                 shape = RoundedCornerShape(5.dp),
             ) {
                 Text("Continue", color = MaterialTheme.colors.primary)
@@ -143,10 +144,14 @@ fun LogInPreview() {
                     .padding(horizontal = 30.dp)
             ) {
                 var credentials by remember { mutableStateOf(User()) }
-                Text(text="LOGIN", modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colors.primary, style = MaterialTheme.typography.h3)
-                Text("Please sign in to continue",  modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colors.primary, style = MaterialTheme.typography.subtitle1)
+                Text(
+                    text = "LOGIN", modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colors.primary, style = MaterialTheme.typography.h3
+                )
+                Text(
+                    "Please sign in to continue", modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colors.primary, style = MaterialTheme.typography.subtitle1
+                )
                 Spacer(modifier = Modifier.height(60.dp))
                 LoginField(
                     value = credentials.username,
@@ -154,9 +159,11 @@ fun LogInPreview() {
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Button(
-                    onClick = {  },
-                    colors = ButtonDefaults.buttonColors(disabledBackgroundColor= MaterialTheme.colors.background,
-                        backgroundColor = MaterialTheme.colors.background),
+                    onClick = { },
+                    colors = ButtonDefaults.buttonColors(
+                        disabledBackgroundColor = MaterialTheme.colors.background,
+                        backgroundColor = MaterialTheme.colors.background
+                    ),
                     modifier = Modifier.align(Alignment.End),
                     enabled = credentials.isNotEmpty(),
                     shape = RoundedCornerShape(5.dp),
@@ -166,9 +173,4 @@ fun LogInPreview() {
             }
         }
     }
-}
-
-
-fun checkCredentials(userInfo: User, context: Context): Boolean {
-    return true
 }
