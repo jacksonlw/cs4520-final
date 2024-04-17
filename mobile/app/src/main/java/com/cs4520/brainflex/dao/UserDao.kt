@@ -11,7 +11,7 @@ interface UserDao {
     @Query("SELECT * FROM users ORDER BY insertedAt DESC LIMIT 1")
     fun getCurrent(): List<UserEntity>
 
-    @Query("SELECT * FROM users ORDER BY insertedAt DESC LIMIT 5")
+    @Query("SELECT * FROM users ORDER BY insertedAt DESC LIMIT 3")
     fun getRecent(): LiveData<List<UserEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

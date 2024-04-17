@@ -33,8 +33,11 @@ fun LeaderboardScreen(viewModel: LeaderboardViewModel, navHostController: NavHos
     }
 
     Surface(color = MaterialTheme.colors.background, modifier = Modifier.fillMaxHeight()) {
-        Column() {
-            Text(text = "Leaderboard", modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp), style = MaterialTheme.typography.h4, color = MaterialTheme.colors.primary)
+        Column {
+            Row(modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)) {
+                Text(text = "Leaderboard", style = MaterialTheme.typography.h4, color = MaterialTheme.colors.primary)
+            }
+
             LeaderboardHeader()
             LazyColumn {
                 itemsIndexed(scores) { index, score ->

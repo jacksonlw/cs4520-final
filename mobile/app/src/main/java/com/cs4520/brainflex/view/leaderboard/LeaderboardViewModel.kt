@@ -30,6 +30,7 @@ class LeaderboardViewModel(private val apiClient: ApiClient, private val userRep
 
     private val wm: WorkManager = LeaderboardWorkManager.worker
     fun loadNextPage() {
+        // Stop if next request will be over total
         if(total != null && offset - limit > total!!) {
             return
         }

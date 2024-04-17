@@ -81,7 +81,7 @@ class GameViewModel(private val apiClient: ApiClient, private val userRepo: User
             // if the user clicked the wrong button
         } else {
             Log.d("GAME OVER", "GAME OVER")
-            val score = _currentLevel.value ?: 1
+            val score = _currentLevel.value?.minus(1) ?: 0
 
             _currentLevel.value = 1
             _sequence.value = listOf()
