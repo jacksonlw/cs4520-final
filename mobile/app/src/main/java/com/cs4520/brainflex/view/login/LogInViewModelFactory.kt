@@ -1,9 +1,8 @@
-package com.cs4520.brainflex
+package com.cs4520.brainflex.view.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.cs4520.brainflex.api.ApiClient
-import com.cs4520.brainflex.dao.UserDao
 import com.cs4520.brainflex.dao.UserRepository
 
 class LogInViewModelFactory (

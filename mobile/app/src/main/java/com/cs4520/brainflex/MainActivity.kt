@@ -17,6 +17,8 @@ import com.cs4520.brainflex.view.game.GameViewModel
 import com.cs4520.brainflex.view.game.GameViewModelFactory
 import com.cs4520.brainflex.view.leaderboard.LeaderboardViewModel
 import com.cs4520.brainflex.view.leaderboard.LeaderboardViewModelFactory
+import com.cs4520.brainflex.view.login.LogInViewModel
+import com.cs4520.brainflex.view.login.LogInViewModelFactory
 import com.cs4520.brainflex.workmanager.LeaderboardWorkManager
 import com.cs4520.brainflex.workmanager.LogInWorkManager
 
