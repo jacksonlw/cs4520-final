@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)
-class LoginScreenUITest {
+class LoginScreenTest {
     private lateinit var viewModel: LogInViewModel
 
     private val recentUsernamesData = MutableLiveData<List<String>>(listOf())
