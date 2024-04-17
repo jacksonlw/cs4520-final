@@ -141,7 +141,7 @@ fun RecentUsers(usernames: List<String>, viewModel: LogInViewModel) {
             Text(
                 text = "Recent Logins",
                 color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.h5,
+                style = MaterialTheme.typography.h6,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
             LazyColumn(
