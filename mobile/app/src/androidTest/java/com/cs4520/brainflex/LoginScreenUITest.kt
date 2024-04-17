@@ -1,4 +1,4 @@
-package com.cs4520.brainflex.ui
+package com.cs4520.brainflex
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
