@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.cs4520.brainflex.dao.AppDatabase
 import com.cs4520.brainflex.view.InformationScreen
+import com.cs4520.brainflex.view.leaderboard.LeaderboardScreen
+import com.cs4520.brainflex.view.leaderboard.LeaderboardViewModel
 
 
 enum class Screen {
@@ -33,7 +35,8 @@ fun AppNavHost(
     navController: NavHostController,
     startDestination: String = NavigationItem.LOGIN.route,
     gameViewModel: GameViewModel,
-    logInViewModel: LogInViewModel
+    logInViewModel: LogInViewModel,
+    leaderboardViewModel: LeaderboardViewModel
 ) {
     NavHost(
         modifier = modifier,
@@ -51,6 +54,9 @@ fun AppNavHost(
         }
         composable(NavigationItem.INFORMATION.route) {
             InformationScreen(navController)
+        }
+        composable(NavigationItem.LEADERBOARD.route) {
+            LeaderboardScreen(leaderboardViewModel, navController)
         }
     }
 
