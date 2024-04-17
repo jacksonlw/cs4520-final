@@ -2,15 +2,15 @@ package com.cs4520.brainflex.dao
 
 import androidx.lifecycle.Transformations
 
-class UserRepository(private val userDao: UserDao) {
+class UserRepository(private val userDao: UserDao): UserRepo{
 
     val recent = userDao.getRecent()
 
-    fun add(user: UserEntity) {
+    override fun add(user: UserEntity) {
         userDao.add(user)
     }
 
-    fun getCurrent(): UserEntity? {
+    override fun getCurrent(): UserEntity? {
         val curr = userDao.getCurrent()
         if(curr.isEmpty()) {
             println("No current user")

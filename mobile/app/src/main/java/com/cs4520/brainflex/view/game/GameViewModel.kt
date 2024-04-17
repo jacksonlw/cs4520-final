@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import com.cs4520.brainflex.Screen
 import com.cs4520.brainflex.api.ApiClient
 import com.cs4520.brainflex.api.requests.ScoreRequestBody
+import com.cs4520.brainflex.dao.UserRepo
 import com.cs4520.brainflex.dao.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,16 +23,16 @@ enum class GameState {
     GAME_OVER
 }
 
-class GameViewModel(private val apiClient: ApiClient, private val userRepo: UserRepository) : ViewModel() {
+class GameViewModel(private val apiClient: ApiClient, private val userRepo: UserRepo) : ViewModel() {
     // repository to send score
-    private var _currentLevel = MutableLiveData<Int>(1)
+    private var _currentLevel = MutableLiveData<Int>()
     val currentLevel: LiveData<Int> = _currentLevel
 
     private val _sequence =
-        MutableLiveData<List<Int>>(currentLevel.value?.let { generateSequence(it) })
+        MutableLiveData<List<Int>>()
     val sequence: LiveData<List<Int>> = _sequence
 
-    private val _gameState = MutableLiveData<GameState>(GameState.GAME_OBSERVE)
+    private val _gameState = MutableLiveData<GameState>()
     val gameState: LiveData<GameState> = _gameState
 
     private var expectedIndex = 0
