@@ -12,8 +12,8 @@ import com.cs4520.brainflex.dao.UserRepository
 import kotlin.random.Random
 
 enum class GameState {
-    OBSERVING,
-    TAPPING,
+    GAME_OBSERVE,
+    GAME_TAP,
     GAME_OVER
 }
 
@@ -26,7 +26,7 @@ class GameViewModel(private val apiClient: ApiClient, private val userRepo: User
         MutableLiveData<List<Int>>(currentLevel.value?.let { generateSequence(it) })
     val sequence: LiveData<List<Int>> = _sequence
 
-    private val _gameState = MutableLiveData<GameState>(GameState.OBSERVING)
+    private val _gameState = MutableLiveData<GameState>(GameState.GAME_OBSERVE)
     val gameState: LiveData<GameState> = _gameState
 
     private var expectedIndex = 0
@@ -35,11 +35,7 @@ class GameViewModel(private val apiClient: ApiClient, private val userRepo: User
         _currentLevel.value = currentLevel
         val newSequence = generateSequence(currentLevel)
         _sequence.value = newSequence
-        _gameState.value = GameState.OBSERVING
-    }
-
-    fun enableTapping() {
-        _gameState.value = GameState.TAPPING
+        _gameState.value = GameState.GAME_OBSERVE
     }
 
     private fun generateSequence(currentLevel: Int): List<Int> {
@@ -67,9 +63,8 @@ class GameViewModel(private val apiClient: ApiClient, private val userRepo: User
                 val newSequence = generateSequence(currentLevel.value!!)
                 _sequence.value = newSequence
 
-
-                // game state is still in progress
-                _gameState.value = GameState.OBSERVING
+                // set game to observe mode
+                _gameState.value = GameState.GAME_OBSERVE
             } else {
                 Log.d("Next", sequence.value?.get(expectedIndex).toString())
 
@@ -87,5 +82,7 @@ class GameViewModel(private val apiClient: ApiClient, private val userRepo: User
         }
     }
 
-
+    fun updateStatus(newState: GameState){
+        _gameState.value = newState
+    }
 }

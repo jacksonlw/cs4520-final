@@ -20,9 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,13 +29,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.launch
 
 @Composable
 fun GameScreen(viewModel: GameViewModel, navHostController: NavHostController) {
 
     val currentLevel by viewModel.currentLevel.observeAsState(1)
     val sequence by viewModel.sequence.observeAsState(listOf())
-    val gameState by viewModel.gameState.observeAsState(GameState.OBSERVING)
+    val gameState by viewModel.gameState.observeAsState(GameState.GAME_OBSERVE)
 
     LaunchedEffect(Unit) {
         viewModel.startNewGame(currentLevel)
@@ -70,18 +70,24 @@ fun MemorySequenceGame(
     gameState: GameState,
     navHostController: NavHostController,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val blue = MaterialTheme.colors.onBackground
     val flash = MaterialTheme.colors.primary
-
     val animatables = remember {
         List(9) {
             Animatable(blue)
         }
     }
+    val flashUser = Color.Black
     val flashAnimationSpec = keyframes<Color> {
-        durationMillis = 1000
+        durationMillis = 600
         flash at 0
-        blue at 1000
+        blue at 600
+    }
+    val flashAnimationSpecUser = keyframes<Color> {
+        durationMillis = 200
+        flashUser at 0
+        blue at 200
     }
 
     // Start sequential animation
@@ -91,15 +97,15 @@ fun MemorySequenceGame(
             // Animate the current item
             animatables[item].animateTo(blue, flashAnimationSpec)
             if (index == sequence.size - 1) {
-                viewModel.enableTapping()
+                viewModel.updateStatus(GameState.GAME_TAP)
             }
         }
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        val text = when(gameState) {
-            GameState.OBSERVING -> "Observe"
-            GameState.TAPPING -> "Tap!"
+        val text = when (gameState) {
+            GameState.GAME_OBSERVE -> "Observe"
+            GameState.GAME_TAP -> "Tap!"
             GameState.GAME_OVER -> "Game Over"
         }
         Text(
@@ -119,10 +125,13 @@ fun MemorySequenceGame(
                         .size(80.dp)
                         .padding(5.dp)
                         .background(animatables[index].value)
-                        .clickable(enabled = gameState == GameState.TAPPING) {
+                        .clickable(enabled = gameState == GameState.GAME_TAP) {
                             viewModel.nextStep(index, navHostController)
+                            coroutineScope.launch {
+                                animatables[index].animateTo(blue, flashAnimationSpecUser)
+                            }
                         }
-                ) {}
+                )
             }
         }
     }
