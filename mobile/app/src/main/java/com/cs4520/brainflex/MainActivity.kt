@@ -12,6 +12,8 @@ import com.cs4520.brainflex.api.ApiFactory
 import com.cs4520.brainflex.dao.AppDatabase
 import com.cs4520.brainflex.dao.UserRepository
 import com.cs4520.brainflex.ui.theme.BrainFlexTheme
+import com.cs4520.brainflex.view.game.GameViewModel
+import com.cs4520.brainflex.view.game.GameViewModelFactory
 import com.cs4520.brainflex.view.leaderboard.LeaderboardViewModel
 import com.cs4520.brainflex.view.leaderboard.LeaderboardViewModelFactory
 
@@ -26,8 +28,10 @@ class MainActivity : ComponentActivity() {
             this,
             factory = LogInViewModelFactory(apiClient, userRepo)
         )[LogInViewModel::class.java]
-        val gameViewModel: GameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
-
+        val gameViewModel: GameViewModel = ViewModelProvider(
+            this,
+            factory = GameViewModelFactory(apiClient, userRepo)
+        )[GameViewModel::class.java]
         val leaderboardViewModel = ViewModelProvider(
             this,
             factory = LeaderboardViewModelFactory(apiClient, userRepo)

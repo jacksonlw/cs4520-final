@@ -14,12 +14,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 @Composable
 fun GameStartScreen(
+    score: Int?,
     navHostController: NavHostController,
 ) {
     Surface(color = MaterialTheme.colors.background) {
@@ -30,6 +33,15 @@ fun GameStartScreen(
                 .fillMaxSize()
                 .padding(horizontal = 30.dp)
         ) {
+            if (score != null) {
+                Text(
+                    text = "Game Over. You finished with a score of $score.",
+                    color = MaterialTheme.colors.primary,
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
             LinkBtn(text = "START", onClick = {
                 navHostController.navigate(Screen.GAME.name)
             })

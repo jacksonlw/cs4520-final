@@ -1,4 +1,4 @@
-package com.cs4520.brainflex
+package com.cs4520.brainflex.view.game
 
 import android.util.Log
 import androidx.compose.ui.unit.Constraints.Companion.Infinity
@@ -6,15 +6,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
+import com.cs4520.brainflex.Screen
+import com.cs4520.brainflex.api.ApiClient
+import com.cs4520.brainflex.dao.UserRepository
 import kotlin.random.Random
 
 enum class GameState {
-    IN_PROGRESS,
+    OBSERVING,
+    TAPPING,
     GAME_OVER
 }
 
-class GameViewModel() : ViewModel() {
-
+class GameViewModel(private val apiClient: ApiClient, private val userRepo: UserRepository) : ViewModel() {
     // repository to send score
     private var _currentLevel = MutableLiveData<Int>(1)
     val currentLevel: LiveData<Int> = _currentLevel
@@ -23,7 +26,7 @@ class GameViewModel() : ViewModel() {
         MutableLiveData<List<Int>>(currentLevel.value?.let { generateSequence(it) })
     val sequence: LiveData<List<Int>> = _sequence
 
-    private val _gameState = MutableLiveData<GameState>(GameState.IN_PROGRESS)
+    private val _gameState = MutableLiveData<GameState>(GameState.OBSERVING)
     val gameState: LiveData<GameState> = _gameState
 
     private var expectedIndex = 0
@@ -32,7 +35,11 @@ class GameViewModel() : ViewModel() {
         _currentLevel.value = currentLevel
         val newSequence = generateSequence(currentLevel)
         _sequence.value = newSequence
-        _gameState.value = GameState.IN_PROGRESS
+        _gameState.value = GameState.OBSERVING
+    }
+
+    fun enableTapping() {
+        _gameState.value = GameState.TAPPING
     }
 
     private fun generateSequence(currentLevel: Int): List<Int> {
@@ -60,7 +67,9 @@ class GameViewModel() : ViewModel() {
                 val newSequence = generateSequence(currentLevel.value!!)
                 _sequence.value = newSequence
 
+
                 // game state is still in progress
+                _gameState.value = GameState.OBSERVING
             } else {
                 Log.d("Next", sequence.value?.get(expectedIndex).toString())
 
@@ -71,9 +80,12 @@ class GameViewModel() : ViewModel() {
             // if the user clicked the wrong button
         } else {
             Log.d("GAME OVER", "GAME OVER")
+            val score = _currentLevel.value
             _currentLevel.value = 1
-            _sequence.value = currentLevel.value?.let { generateSequence(it) }
-            navHostController.navigate(Screen.INFORMATION.name)
+            _sequence.value = listOf()
+            navHostController.navigate(Screen.GAMESTART.name + "/$score")
         }
     }
+
+
 }

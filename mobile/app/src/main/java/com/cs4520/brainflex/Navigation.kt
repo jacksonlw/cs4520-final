@@ -3,10 +3,13 @@ package com.cs4520.brainflex
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.cs4520.brainflex.dao.AppDatabase
+import androidx.navigation.navArgument
 import com.cs4520.brainflex.view.InformationScreen
+import com.cs4520.brainflex.view.game.GameScreen
+import com.cs4520.brainflex.view.game.GameViewModel
 import com.cs4520.brainflex.view.leaderboard.LeaderboardScreen
 import com.cs4520.brainflex.view.leaderboard.LeaderboardViewModel
 
@@ -47,7 +50,12 @@ fun AppNavHost(
             LogInScreen(logInViewModel, navController)
         }
         composable(NavigationItem.GAMESTART.route) {
-            GameStartScreen(navController)
+            GameStartScreen(score = null, navController)
+        }
+        composable(NavigationItem.GAMESTART.route + "/{score}", arguments = listOf(navArgument("score") {
+            type = NavType.IntType
+        })) {
+            GameStartScreen(score = it.arguments?.getInt("score"), navController)
         }
         composable(NavigationItem.GAME.route) {
             GameScreen(gameViewModel, navController)

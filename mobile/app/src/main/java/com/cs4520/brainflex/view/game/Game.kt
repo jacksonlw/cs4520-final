@@ -1,4 +1,4 @@
-package com.cs4520.brainflex
+package com.cs4520.brainflex.view.game
 
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.keyframes
@@ -36,7 +36,7 @@ fun GameScreen(viewModel: GameViewModel, navHostController: NavHostController) {
 
     val currentLevel by viewModel.currentLevel.observeAsState(1)
     val sequence by viewModel.sequence.observeAsState(listOf())
-    val gameState by viewModel.gameState.observeAsState(GameState.IN_PROGRESS)
+    val gameState by viewModel.gameState.observeAsState(GameState.OBSERVING)
 
     LaunchedEffect(Unit) {
         viewModel.startNewGame(currentLevel)
@@ -59,7 +59,7 @@ fun GameScreen(viewModel: GameViewModel, navHostController: NavHostController) {
 
 @Composable
 fun Level(gameState: GameState, currentScore: Int) {
-    Text("LEVEL " + currentScore, color = MaterialTheme.colors.primary, fontSize = 20.sp)
+    Text("LEVEL $currentScore", color = MaterialTheme.colors.primary, fontSize = 20.sp)
 }
 
 
@@ -72,43 +72,42 @@ fun MemorySequenceGame(
 ) {
     val blue = MaterialTheme.colors.onBackground
     val flash = MaterialTheme.colors.primary
-    var isDone by remember { mutableStateOf(false) }
+
+    val animatables = remember {
+        List(9) {
+            Animatable(blue)
+        }
+    }
     val flashAnimationSpec = keyframes<Color> {
         durationMillis = 1000
         flash at 0
         blue at 1000
     }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        if (isDone) {
-            Text(
-                "Tap!", color = MaterialTheme.colors.primary,
-                fontSize = 12.sp, textAlign = TextAlign.Center
-            )
-        } else {
-            Text(
-                "Observe", color = MaterialTheme.colors.primary,
-                fontSize = 12.sp, textAlign = TextAlign.Center
-            )
+    // Start sequential animation
+    LaunchedEffect(sequence) {
+        // Iterate through each index and animate sequentially
+        sequence.forEachIndexed { index, item ->
+            // Animate the current item
+            animatables[item].animateTo(blue, flashAnimationSpec)
+            if (index == sequence.size - 1) {
+                viewModel.enableTapping()
+            }
         }
+    }
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        val text = when(gameState) {
+            GameState.OBSERVING -> "Observe"
+            GameState.TAPPING -> "Tap!"
+            GameState.GAME_OVER -> "Game Over"
+        }
+        Text(
+            text, color = MaterialTheme.colors.primary,
+            fontSize = 16.sp, textAlign = TextAlign.Center
+        )
         Spacer(modifier = Modifier.height(10.dp))
 
-        val animatables = remember {
-            List(9) {
-                Animatable(blue)
-            }
-        }
-// Start sequential animation
-        LaunchedEffect(sequence) {
-            // Iterate through each index and animate sequentially
-            sequence.forEachIndexed { index, item ->
-                // Animate the current item
-                animatables[item].animateTo(blue, flashAnimationSpec)
-                if (index == sequence.size - 1) {
-                    isDone = true
-                }
-            }
-        }
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
             modifier = Modifier.fillMaxSize(),
@@ -120,7 +119,7 @@ fun MemorySequenceGame(
                         .size(80.dp)
                         .padding(5.dp)
                         .background(animatables[index].value)
-                        .clickable(enabled = isDone) {
+                        .clickable(enabled = gameState == GameState.TAPPING) {
                             viewModel.nextStep(index, navHostController)
                         }
                 ) {}
