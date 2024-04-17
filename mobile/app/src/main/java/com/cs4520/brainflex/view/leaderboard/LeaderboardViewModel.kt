@@ -20,6 +20,7 @@ class LeaderboardViewModel(private val apiClient: ApiClient, private val userRep
     val scores: LiveData<List<Score>> = _scores
 
     fun loadNextPage() {
+        // Stop if next request will be over total
         if(total != null && offset - limit > total!!) {
             return
         }
