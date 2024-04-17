@@ -24,14 +24,14 @@ enum class GameState {
 
 class GameViewModel(private val apiClient: ApiClient, private val userRepo: UserRepository) : ViewModel() {
     // repository to send score
-    private var _currentLevel = MutableLiveData<Int>(1)
+    private var _currentLevel = MutableLiveData<Int>()
     val currentLevel: LiveData<Int> = _currentLevel
 
     private val _sequence =
-        MutableLiveData<List<Int>>(currentLevel.value?.let { generateSequence(it) })
+        MutableLiveData<List<Int>>()
     val sequence: LiveData<List<Int>> = _sequence
 
-    private val _gameState = MutableLiveData<GameState>(GameState.GAME_OBSERVE)
+    private val _gameState = MutableLiveData<GameState>()
     val gameState: LiveData<GameState> = _gameState
 
     private var expectedIndex = 0

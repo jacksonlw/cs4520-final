@@ -8,6 +8,7 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
+import androidx.work.WorkManager
 import com.cs4520.brainflex.api.ApiFactory
 import com.cs4520.brainflex.dao.AppDatabase
 import com.cs4520.brainflex.dao.UserRepository
@@ -16,6 +17,8 @@ import com.cs4520.brainflex.view.game.GameViewModel
 import com.cs4520.brainflex.view.game.GameViewModelFactory
 import com.cs4520.brainflex.view.leaderboard.LeaderboardViewModel
 import com.cs4520.brainflex.view.leaderboard.LeaderboardViewModelFactory
+import com.cs4520.brainflex.workmanager.LeaderboardWorkManager
+import com.cs4520.brainflex.workmanager.LogInWorkManager
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +40,8 @@ class MainActivity : ComponentActivity() {
             factory = LeaderboardViewModelFactory(apiClient, userRepo)
         )[LeaderboardViewModel::class.java]
 
+        LogInWorkManager.worker =  WorkManager.getInstance(this)
+        LeaderboardWorkManager.worker =  WorkManager.getInstance(this)
 
         setContent {
             BrainFlexTheme {
