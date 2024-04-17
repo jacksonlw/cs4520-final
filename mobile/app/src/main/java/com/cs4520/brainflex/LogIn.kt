@@ -107,6 +107,7 @@ fun LogInScreen(
             ) {
                 Text("Continue")
             }
+
             RecentUsers(usernames = recentUsernames.value, viewModel = viewModel)
         }
     }
@@ -114,34 +115,35 @@ fun LogInScreen(
 
 @Composable
 fun RecentUsers(usernames: List<String>, viewModel: LogInViewModel) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(
-            text = "Recent Logins",
-            color = MaterialTheme.colors.primary,
-            style = MaterialTheme.typography.h5,
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
-        LazyColumn(
-            horizontalAlignment = Alignment.Start,
+    if(usernames.isNotEmpty()) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            items(items = usernames, key = { it }) { username ->
-                Text(
-                    text = username,
-                    color = MaterialTheme.colors.primary,
-                    style = TextStyle(textDecoration = TextDecoration.Underline),
-                    fontSize = 18.sp,
-                    modifier = Modifier
-                        .padding(bottom = 4.dp)
-                        .clickable {
-                            viewModel.login(username)
-                        }
-                )
+            Text(
+                text = "Recent Logins",
+                color = MaterialTheme.colors.primary,
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            LazyColumn(
+                horizontalAlignment = Alignment.Start,
+            ) {
+                items(items = usernames, key = { it }) { username ->
+                    Text(
+                        text = username,
+                        color = MaterialTheme.colors.primary,
+                        style = TextStyle(textDecoration = TextDecoration.Underline),
+                        fontSize = 18.sp,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                            .clickable {
+                                viewModel.login(username)
+                            }
+                    )
+                }
             }
         }
     }
-
 }
 
 @Composable
@@ -149,7 +151,7 @@ fun LoginField(
     value: String,
     onChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    label: String = "username",
+    label: String = "Username",
 ) {
 
     val focusManager = LocalFocusManager.current
