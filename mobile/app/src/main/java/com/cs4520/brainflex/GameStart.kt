@@ -30,64 +30,37 @@ fun GameStartScreen(
                 .fillMaxSize()
                 .padding(horizontal = 30.dp)
         ) {
-            StartBtn(navHostController)
-            RulesBtn(navHostController)
-            LogoutBtn(navHostController)
+            LinkBtn(text = "START", onClick = {
+                navHostController.navigate(Screen.GAME.name)
+            })
+            LinkBtn(text = "LEADERBOARD", onClick = {
+                navHostController.navigate(Screen.LEADERBOARD.name)
+            })
+            LinkBtn(text = "RULES", onClick = {
+                navHostController.navigate(Screen.INFORMATION.name)
+            })
+            LinkBtn(text = "LOG OUT", onClick = {
+                navHostController.navigate(Screen.LOGIN.name)
+            })
         }
     }
 }
 
-@Composable
-fun StartBtn(
-    navHostController: NavHostController
-) {
-    Button(
-        onClick = {
-            navHostController.navigate(Screen.GAME.name)
-        },
-        colors = ButtonDefaults.buttonColors(
-            disabledBackgroundColor = MaterialTheme.colors.primary,
-            backgroundColor = MaterialTheme.colors.primary
-        ),
-        shape = RoundedCornerShape(5.dp),
-    ) {
-        Text("START", color = Color.Black)
-    }
-}
 
 @Composable
-fun RulesBtn(
-    navHostController: NavHostController
+fun LinkBtn(
+    text: String,
+    onClick: () -> Unit
 ) {
     Button(
-        onClick = {
-            navHostController.navigate(Screen.INFORMATION.name)
-        },
+        onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             disabledBackgroundColor = MaterialTheme.colors.primary,
             backgroundColor = MaterialTheme.colors.primary
         ),
         shape = RoundedCornerShape(5.dp),
     ) {
-        Text("RULES", color = Color.Black)
-    }
-}
-
-@Composable
-fun LogoutBtn(
-    navHostController: NavHostController
-) {
-    Button(
-        onClick = {
-            navHostController.navigate(Screen.LOGIN.name)
-        },
-        colors = ButtonDefaults.buttonColors(
-            disabledBackgroundColor = MaterialTheme.colors.primary,
-            backgroundColor = MaterialTheme.colors.primary
-        ),
-        shape = RoundedCornerShape(5.dp),
-    ) {
-        Text("LOG OUT", color = Color.Black)
+        Text(text, color = Color.Black)
     }
 }
 

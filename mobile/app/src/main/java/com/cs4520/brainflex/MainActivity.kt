@@ -12,6 +12,8 @@ import com.cs4520.brainflex.api.ApiFactory
 import com.cs4520.brainflex.dao.AppDatabase
 import com.cs4520.brainflex.dao.UserRepository
 import com.cs4520.brainflex.ui.theme.BrainFlexTheme
+import com.cs4520.brainflex.view.leaderboard.LeaderboardViewModel
+import com.cs4520.brainflex.view.leaderboard.LeaderboardViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +28,12 @@ class MainActivity : ComponentActivity() {
         )[LogInViewModel::class.java]
         val gameViewModel: GameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
 
+        val leaderboardViewModel = ViewModelProvider(
+            this,
+            factory = LeaderboardViewModelFactory(apiClient, userRepo)
+        )[LeaderboardViewModel::class.java]
+
+
         setContent {
             BrainFlexTheme {
                 Surface(
@@ -35,6 +43,7 @@ class MainActivity : ComponentActivity() {
                         navController = rememberNavController(),
                         logInViewModel = logInViewModel,
                         gameViewModel = gameViewModel,
+                        leaderboardViewModel = leaderboardViewModel
                     )
                 }
             }
