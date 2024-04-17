@@ -16,6 +16,7 @@ import com.cs4520.brainflex.dao.UserEntity
 import com.cs4520.brainflex.dao.UserRepository
 import com.cs4520.brainflex.dto.User
 import com.cs4520.brainflex.workmanager.LeaderboardWorkManager
+import com.cs4520.brainflex.workmanager.LogInWorkManager
 import com.cs4520.brainflex.workmanager.LogInWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -32,7 +33,7 @@ class LogInViewModel(private val apiClient: ApiClient, private val userRepo: Use
 
     private val _loginResponseEvent = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
     val loginResponseEvent = _loginResponseEvent.asSharedFlow()
-    private val wm: WorkManager = LeaderboardWorkManager.worker
+    private val wm: WorkManager = LogInWorkManager.worker
 
     fun login(username: String) {
         viewModelScope.launch {

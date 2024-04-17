@@ -23,6 +23,10 @@ import com.cs4520.brainflex.workmanager.LogInWorkManager
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        LogInWorkManager.worker =  WorkManager.getInstance(this)
+        LeaderboardWorkManager.worker =  WorkManager.getInstance(this)
+
         val db = AppDatabase.get(this)
         val userRepo = UserRepository(db.userDao())
         val apiClient = ApiFactory().create()
@@ -39,9 +43,6 @@ class MainActivity : ComponentActivity() {
             this,
             factory = LeaderboardViewModelFactory(apiClient, userRepo)
         )[LeaderboardViewModel::class.java]
-
-        LogInWorkManager.worker =  WorkManager.getInstance(this)
-        LeaderboardWorkManager.worker =  WorkManager.getInstance(this)
 
         setContent {
             BrainFlexTheme {
