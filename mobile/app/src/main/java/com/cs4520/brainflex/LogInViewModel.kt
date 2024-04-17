@@ -29,7 +29,7 @@ class LogInViewModel(private val apiClient: ApiClient, private val userRepo: Use
             withContext(Dispatchers.IO) {
                 val body = LoginRequestBody(username)
                 val res = apiClient.login(body)
-                if (res.isSuccessful) {
+                if (!res.isSuccessful) {
                     _loginResponseEvent.tryEmit(false)
                     return@withContext
                 }

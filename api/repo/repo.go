@@ -48,7 +48,7 @@ func (r repo) InsertScore(username string, score int) error {
 }
 
 func (r repo) InsertUser(username string) error {
-	_, err := r.db.Exec(context.Background(), "INSERT INTO users (username) VALUES ($1)", username)
+	_, err := r.db.Exec(context.Background(), "INSERT INTO users (username) VALUES ($1) ON CONFLICT DO NOTHING", username)
 	return err
 }
 
