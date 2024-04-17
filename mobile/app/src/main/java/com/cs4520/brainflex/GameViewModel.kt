@@ -9,7 +9,8 @@ import androidx.navigation.NavHostController
 import kotlin.random.Random
 
 enum class GameState {
-    IN_PROGRESS,
+    GAME_OBSERVE,
+    GAME_TAP,
     GAME_OVER
 }
 
@@ -23,7 +24,7 @@ class GameViewModel() : ViewModel() {
         MutableLiveData<List<Int>>(currentLevel.value?.let { generateSequence(it) })
     val sequence: LiveData<List<Int>> = _sequence
 
-    private val _gameState = MutableLiveData<GameState>(GameState.IN_PROGRESS)
+    private val _gameState = MutableLiveData<GameState>(GameState.GAME_OBSERVE)
     val gameState: LiveData<GameState> = _gameState
 
     private var expectedIndex = 0
@@ -32,7 +33,7 @@ class GameViewModel() : ViewModel() {
         _currentLevel.value = currentLevel
         val newSequence = generateSequence(currentLevel)
         _sequence.value = newSequence
-        _gameState.value = GameState.IN_PROGRESS
+        _gameState.value = GameState.GAME_OBSERVE
     }
 
     private fun generateSequence(currentLevel: Int): List<Int> {
@@ -60,6 +61,9 @@ class GameViewModel() : ViewModel() {
                 val newSequence = generateSequence(currentLevel.value!!)
                 _sequence.value = newSequence
 
+                // set game to observe mode
+                _gameState.value = GameState.GAME_OBSERVE
+
                 // game state is still in progress
             } else {
                 Log.d("Next", sequence.value?.get(expectedIndex).toString())
@@ -75,5 +79,9 @@ class GameViewModel() : ViewModel() {
             _sequence.value = currentLevel.value?.let { generateSequence(it) }
             navHostController.navigate(Screen.INFORMATION.name)
         }
+    }
+
+    fun updateStatus(newState: GameState){
+        _gameState.value = newState
     }
 }

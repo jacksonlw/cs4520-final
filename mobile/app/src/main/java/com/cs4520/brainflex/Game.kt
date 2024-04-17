@@ -1,5 +1,6 @@
 package com.cs4520.brainflex
 
+import android.util.Log
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.background
@@ -36,7 +37,7 @@ fun GameScreen(viewModel: GameViewModel, navHostController: NavHostController) {
 
     val currentLevel by viewModel.currentLevel.observeAsState(1)
     val sequence by viewModel.sequence.observeAsState(listOf())
-    val gameState by viewModel.gameState.observeAsState(GameState.IN_PROGRESS)
+    val gameState by viewModel.gameState.observeAsState(GameState.GAME_OBSERVE)
 
     LaunchedEffect(Unit) {
         viewModel.startNewGame(currentLevel)
@@ -80,14 +81,21 @@ fun MemorySequenceGame(
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        if (isDone) {
+        if (gameState == GameState.GAME_TAP) {
             Text(
                 "Tap!", color = MaterialTheme.colors.primary,
                 fontSize = 12.sp, textAlign = TextAlign.Center
             )
-        } else {
+        }
+        if (gameState == GameState.GAME_OBSERVE){
             Text(
                 "Observe", color = MaterialTheme.colors.primary,
+                fontSize = 12.sp, textAlign = TextAlign.Center
+            )
+        }
+        if (gameState == GameState.GAME_OVER){
+            Text(
+                "Game Over", color = MaterialTheme.colors.primary,
                 fontSize = 12.sp, textAlign = TextAlign.Center
             )
         }
@@ -98,14 +106,14 @@ fun MemorySequenceGame(
                 Animatable(blue)
             }
         }
-// Start sequential animation
+        // Start sequential animation
         LaunchedEffect(sequence) {
             // Iterate through each index and animate sequentially
             sequence.forEachIndexed { index, item ->
                 // Animate the current item
                 animatables[item].animateTo(blue, flashAnimationSpec)
                 if (index == sequence.size - 1) {
-                    isDone = true
+                    viewModel.updateStatus(GameState.GAME_TAP)
                 }
             }
         }
@@ -120,7 +128,7 @@ fun MemorySequenceGame(
                         .size(80.dp)
                         .padding(5.dp)
                         .background(animatables[index].value)
-                        .clickable(enabled = isDone) {
+                        .clickable(enabled = gameState == GameState.GAME_TAP ) {
                             viewModel.nextStep(index, navHostController)
                         }
                 ) {}
