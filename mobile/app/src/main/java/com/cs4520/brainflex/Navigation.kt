@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.cs4520.brainflex.dao.AppDatabase
 import com.cs4520.brainflex.view.InformationScreen
 
 

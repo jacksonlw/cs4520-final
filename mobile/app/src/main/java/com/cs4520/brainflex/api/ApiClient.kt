@@ -2,7 +2,7 @@ package com.cs4520.brainflex.api
 
 import com.cs4520.brainflex.api.requests.LoginRequestBody
 import com.cs4520.brainflex.api.requests.ScoreRequestBody
-import com.cs4520.brainflex.dto.Leaderboard
+import com.cs4520.brainflex.dto.LeaderboardData
 import com.cs4520.brainflex.dto.User
 import retrofit2.Response
 import retrofit2.http.Body
@@ -12,7 +12,7 @@ import retrofit2.http.POST
 
 interface ApiClient {
     @GET("leaderboard")
-    suspend fun getLeaderboard(): Response<Leaderboard>
+    suspend fun getLeaderboard(): Response<LeaderboardData>
 
     @Headers("Content-Type: application/json")
     @POST("login")

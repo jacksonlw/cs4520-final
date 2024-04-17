@@ -1,6 +1,7 @@
 package com.cs4520.brainflex
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -22,7 +25,9 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,10 +36,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.cs4520.brainflex.ui.theme.BrainFlexTheme
 
@@ -44,7 +52,22 @@ fun LogInScreen(
     viewModel: LogInViewModel,
     navHostController: NavHostController,
 ) {
-    Surface(color = MaterialTheme.colors.secondary) {
+    val recentUsernames = viewModel.recentUsernames.observeAsState(listOf())
+    val context = LocalContext.current
+    var username by remember { mutableStateOf("") }
+
+    LaunchedEffect(true) {
+        viewModel.loginResponseEvent.collect {success ->
+            if(success) {
+                Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
+                navHostController.navigate(Screen.GAMESTART.name)
+            } else {
+                Toast.makeText(context, "Unable to login", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    Surface(color = MaterialTheme.colors.background) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -52,8 +75,6 @@ fun LogInScreen(
                 .fillMaxSize()
                 .padding(horizontal = 30.dp)
         ) {
-            val context = LocalContext.current
-            var username by remember { mutableStateOf("") }
             Text(
                 text = "LOGIN", modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colors.primary, style = MaterialTheme.typography.h4
@@ -73,21 +94,54 @@ fun LogInScreen(
             Button(
                 onClick = {
                     viewModel.login(username)
-                    Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
-                    navHostController.navigate(Screen.GAMESTART.name)
                 },
                 colors = ButtonDefaults.buttonColors(
-                    disabledBackgroundColor = MaterialTheme.colors.background,
-                    backgroundColor = MaterialTheme.colors.background
+                    disabledBackgroundColor = MaterialTheme.colors.primary,
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = Color.Black,
+                    disabledContentColor = Color.Gray
                 ),
                 modifier = Modifier.align(Alignment.End),
                 enabled = username.isNotEmpty(),
                 shape = RoundedCornerShape(5.dp),
             ) {
-                Text("Continue", color = MaterialTheme.colors.primary)
+                Text("Continue")
+            }
+            RecentUsers(usernames = recentUsernames.value, viewModel = viewModel)
+        }
+    }
+}
+
+@Composable
+fun RecentUsers(usernames: List<String>, viewModel: LogInViewModel) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = "Recent Logins",
+            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.h5,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+        LazyColumn(
+            horizontalAlignment = Alignment.Start,
+        ) {
+            items(items = usernames, key = { it }) { username ->
+                Text(
+                    text = username,
+                    color = MaterialTheme.colors.primary,
+                    style = TextStyle(textDecoration = TextDecoration.Underline),
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .padding(bottom = 4.dp)
+                        .clickable {
+                            viewModel.login(username)
+                        }
+                )
             }
         }
     }
+
 }
 
 @Composable
@@ -109,7 +163,7 @@ fun LoginField(
     TextField(
         value = value,
         onValueChange = onChange,
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         leadingIcon = leadingIcon,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         keyboardActions = KeyboardActions(
@@ -121,6 +175,7 @@ fun LoginField(
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = MaterialTheme.colors.primary,
             unfocusedIndicatorColor = MaterialTheme.colors.primary,
+            textColor = Color.Black
         )
     )
 }

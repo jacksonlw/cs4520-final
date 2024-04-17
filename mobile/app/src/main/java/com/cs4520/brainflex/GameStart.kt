@@ -32,6 +32,7 @@ fun GameStartScreen(
         ) {
             StartBtn(navHostController)
             RulesBtn(navHostController)
+            LogoutBtn(navHostController)
         }
     }
 }
@@ -69,6 +70,24 @@ fun RulesBtn(
         shape = RoundedCornerShape(5.dp),
     ) {
         Text("RULES", color = Color.Black)
+    }
+}
+
+@Composable
+fun LogoutBtn(
+    navHostController: NavHostController
+) {
+    Button(
+        onClick = {
+            navHostController.navigate(Screen.LOGIN.name)
+        },
+        colors = ButtonDefaults.buttonColors(
+            disabledBackgroundColor = MaterialTheme.colors.primary,
+            backgroundColor = MaterialTheme.colors.primary
+        ),
+        shape = RoundedCornerShape(5.dp),
+    ) {
+        Text("LOG OUT", color = Color.Black)
     }
 }
 

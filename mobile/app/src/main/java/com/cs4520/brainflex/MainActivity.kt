@@ -9,17 +9,20 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
 import com.cs4520.brainflex.api.ApiFactory
+import com.cs4520.brainflex.dao.AppDatabase
+import com.cs4520.brainflex.dao.UserRepository
 import com.cs4520.brainflex.ui.theme.BrainFlexTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
+        val db = AppDatabase.get(this)
+        val userRepo = UserRepository(db.userDao())
         val apiClient = ApiFactory().create()
+
         val logInViewModel: LogInViewModel = ViewModelProvider(
             this,
-            factory = LogInViewModelFactory(apiClient)
+            factory = LogInViewModelFactory(apiClient, userRepo)
         )[LogInViewModel::class.java]
         val gameViewModel: GameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
 

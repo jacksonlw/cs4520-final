@@ -1,0 +1,19 @@
+package com.cs4520.brainflex.dao
+
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+
+@Dao
+interface UserDao {
+    @Query("SELECT * FROM users ORDER BY insertedAt DESC LIMIT 1")
+    fun getCurrent(): LiveData<List<UserEntity>>
+
+    @Query("SELECT * FROM users ORDER BY insertedAt DESC LIMIT 5")
+    fun getRecent(): LiveData<List<UserEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun add(user: UserEntity)
+}
