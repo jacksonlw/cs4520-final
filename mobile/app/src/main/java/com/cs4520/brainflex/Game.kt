@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.launch
 
 @Composable
 fun GameScreen(viewModel: GameViewModel, navHostController: NavHostController) {
@@ -73,12 +75,18 @@ fun MemorySequenceGame(
 ) {
     val blue = MaterialTheme.colors.onBackground
     val flash = MaterialTheme.colors.primary
-    var isDone by remember { mutableStateOf(false) }
+    val flashUser = Color.Black
     val flashAnimationSpec = keyframes<Color> {
-        durationMillis = 1000
+        durationMillis = 600
         flash at 0
-        blue at 1000
+        blue at 600
     }
+    val flashAnimationSpecUser = keyframes<Color> {
+        durationMillis = 200
+        flashUser at 0
+        blue at 200
+    }
+
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         if (gameState == GameState.GAME_TAP) {
@@ -106,6 +114,7 @@ fun MemorySequenceGame(
                 Animatable(blue)
             }
         }
+        val coroutineScope = rememberCoroutineScope()
         // Start sequential animation
         LaunchedEffect(sequence) {
             // Iterate through each index and animate sequentially
@@ -128,8 +137,11 @@ fun MemorySequenceGame(
                         .size(80.dp)
                         .padding(5.dp)
                         .background(animatables[index].value)
-                        .clickable(enabled = gameState == GameState.GAME_TAP ) {
+                        .clickable(enabled = gameState == GameState.GAME_TAP) {
                             viewModel.nextStep(index, navHostController)
+                            coroutineScope.launch {
+                                animatables[index].animateTo(blue, flashAnimationSpecUser)
+                            }
                         }
                 ) {}
             }
