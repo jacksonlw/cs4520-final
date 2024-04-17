@@ -1,11 +1,19 @@
-package com.cs4520.brainflex
+package com.cs4520.brainflex.view.game
 
 import android.util.Log
 import androidx.compose.ui.unit.Constraints.Companion.Infinity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.cs4520.brainflex.Screen
+import com.cs4520.brainflex.api.ApiClient
+import com.cs4520.brainflex.api.requests.ScoreRequestBody
+import com.cs4520.brainflex.dao.UserRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
 enum class GameState {
@@ -14,8 +22,7 @@ enum class GameState {
     GAME_OVER
 }
 
-class GameViewModel() : ViewModel() {
-
+class GameViewModel(private val apiClient: ApiClient, private val userRepo: UserRepository) : ViewModel() {
     // repository to send score
     private var _currentLevel = MutableLiveData<Int>(1)
     val currentLevel: LiveData<Int> = _currentLevel
@@ -63,8 +70,6 @@ class GameViewModel() : ViewModel() {
 
                 // set game to observe mode
                 _gameState.value = GameState.GAME_OBSERVE
-
-                // game state is still in progress
             } else {
                 Log.d("Next", sequence.value?.get(expectedIndex).toString())
 
@@ -75,9 +80,25 @@ class GameViewModel() : ViewModel() {
             // if the user clicked the wrong button
         } else {
             Log.d("GAME OVER", "GAME OVER")
+            val score = _currentLevel.value ?: 1
+
             _currentLevel.value = 1
-            _sequence.value = currentLevel.value?.let { generateSequence(it) }
-            navHostController.navigate(Screen.INFORMATION.name)
+            _sequence.value = listOf()
+            addScoreToLeaderboard(score)
+            navHostController.navigate(Screen.GAMESTART.name + "/$score")
+        }
+    }
+
+    private fun addScoreToLeaderboard(score: Int) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val user = userRepo.getCurrent()
+                if(user == null) {
+                    println("no user")
+                    return@withContext
+                }
+                apiClient.addScoreToLeaderboard(ScoreRequestBody(user.username, score))
+            }
         }
     }
 

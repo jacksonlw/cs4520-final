@@ -1,6 +1,5 @@
-package com.cs4520.brainflex
+package com.cs4520.brainflex.view.game
 
-import android.util.Log
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.background
@@ -21,10 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,7 +59,7 @@ fun GameScreen(viewModel: GameViewModel, navHostController: NavHostController) {
 
 @Composable
 fun Level(gameState: GameState, currentScore: Int) {
-    Text("LEVEL " + currentScore, color = MaterialTheme.colors.primary, fontSize = 20.sp)
+    Text("LEVEL $currentScore", color = MaterialTheme.colors.primary, fontSize = 20.sp)
 }
 
 
@@ -73,8 +70,14 @@ fun MemorySequenceGame(
     gameState: GameState,
     navHostController: NavHostController,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val blue = MaterialTheme.colors.onBackground
     val flash = MaterialTheme.colors.primary
+    val animatables = remember {
+        List(9) {
+            Animatable(blue)
+        }
+    }
     val flashUser = Color.Black
     val flashAnimationSpec = keyframes<Color> {
         durationMillis = 600
@@ -87,45 +90,30 @@ fun MemorySequenceGame(
         blue at 200
     }
 
+    // Start sequential animation
+    LaunchedEffect(sequence) {
+        // Iterate through each index and animate sequentially
+        sequence.forEachIndexed { index, item ->
+            // Animate the current item
+            animatables[item].animateTo(blue, flashAnimationSpec)
+            if (index == sequence.size - 1) {
+                viewModel.updateStatus(GameState.GAME_TAP)
+            }
+        }
+    }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        if (gameState == GameState.GAME_TAP) {
-            Text(
-                "Tap!", color = MaterialTheme.colors.primary,
-                fontSize = 12.sp, textAlign = TextAlign.Center
-            )
+        val text = when (gameState) {
+            GameState.GAME_OBSERVE -> "Observe"
+            GameState.GAME_TAP -> "Tap!"
+            GameState.GAME_OVER -> "Game Over"
         }
-        if (gameState == GameState.GAME_OBSERVE){
-            Text(
-                "Observe", color = MaterialTheme.colors.primary,
-                fontSize = 12.sp, textAlign = TextAlign.Center
-            )
-        }
-        if (gameState == GameState.GAME_OVER){
-            Text(
-                "Game Over", color = MaterialTheme.colors.primary,
-                fontSize = 12.sp, textAlign = TextAlign.Center
-            )
-        }
+        Text(
+            text, color = MaterialTheme.colors.primary,
+            fontSize = 16.sp, textAlign = TextAlign.Center
+        )
         Spacer(modifier = Modifier.height(10.dp))
 
-        val animatables = remember {
-            List(9) {
-                Animatable(blue)
-            }
-        }
-        val coroutineScope = rememberCoroutineScope()
-        // Start sequential animation
-        LaunchedEffect(sequence) {
-            // Iterate through each index and animate sequentially
-            sequence.forEachIndexed { index, item ->
-                // Animate the current item
-                animatables[item].animateTo(blue, flashAnimationSpec)
-                if (index == sequence.size - 1) {
-                    viewModel.updateStatus(GameState.GAME_TAP)
-                }
-            }
-        }
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
             modifier = Modifier.fillMaxSize(),
@@ -143,7 +131,7 @@ fun MemorySequenceGame(
                                 animatables[index].animateTo(blue, flashAnimationSpecUser)
                             }
                         }
-                ) {}
+                )
             }
         }
     }

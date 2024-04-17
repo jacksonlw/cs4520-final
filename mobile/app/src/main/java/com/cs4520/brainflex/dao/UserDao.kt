@@ -9,7 +9,7 @@ import androidx.room.Query
 @Dao
 interface UserDao {
     @Query("SELECT * FROM users ORDER BY insertedAt DESC LIMIT 1")
-    fun getCurrent(): LiveData<List<UserEntity>>
+    fun getCurrent(): List<UserEntity>
 
     @Query("SELECT * FROM users ORDER BY insertedAt DESC LIMIT 5")
     fun getRecent(): LiveData<List<UserEntity>>
