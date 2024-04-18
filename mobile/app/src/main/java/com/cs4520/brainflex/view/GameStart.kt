@@ -1,4 +1,4 @@
-package com.cs4520.brainflex
+package com.cs4520.brainflex.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.cs4520.brainflex.Screen
 
 @Composable
 fun GameStartScreen(

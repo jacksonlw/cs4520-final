@@ -7,11 +7,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.cs4520.brainflex.view.GameStartScreen
 import com.cs4520.brainflex.view.InformationScreen
 import com.cs4520.brainflex.view.game.GameScreen
 import com.cs4520.brainflex.view.game.GameViewModel
 import com.cs4520.brainflex.view.leaderboard.LeaderboardScreen
 import com.cs4520.brainflex.view.leaderboard.LeaderboardViewModel
+import com.cs4520.brainflex.view.login.LogInScreen
+import com.cs4520.brainflex.view.login.LogInViewModel
 
 
 enum class Screen {

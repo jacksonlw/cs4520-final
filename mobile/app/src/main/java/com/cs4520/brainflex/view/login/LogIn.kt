@@ -1,4 +1,4 @@
-package com.cs4520.brainflex
+package com.cs4520.brainflex.view.login
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -50,6 +50,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.cs4520.brainflex.R
+import com.cs4520.brainflex.Screen
 import com.cs4520.brainflex.ui.theme.BrainFlexTheme
 
 
@@ -131,7 +133,6 @@ fun LogInScreen(
 
 @Composable
 fun RecentUsers(usernames: List<String>, viewModel: LogInViewModel) {
-
     if(usernames.isNotEmpty()) {
         Column(
             modifier = Modifier.fillMaxWidth()

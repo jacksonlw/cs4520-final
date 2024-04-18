@@ -1,4 +1,4 @@
-package com.cs4520.brainflex
+package com.cs4520.brainflex.view.login
 
 import android.util.Log
 import androidx.lifecycle.Transformations
@@ -11,11 +11,8 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.cs4520.brainflex.api.ApiClient
 import com.cs4520.brainflex.api.requests.LoginRequestBody
-import com.cs4520.brainflex.dao.UserDao
 import com.cs4520.brainflex.dao.UserEntity
 import com.cs4520.brainflex.dao.UserRepository
-import com.cs4520.brainflex.dto.User
-import com.cs4520.brainflex.workmanager.LeaderboardWorkManager
 import com.cs4520.brainflex.workmanager.LogInWorkManager
 import com.cs4520.brainflex.workmanager.LogInWorker
 import kotlinx.coroutines.Dispatchers

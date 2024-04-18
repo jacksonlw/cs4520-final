@@ -1,7 +1,5 @@
 package com.cs4520.brainflex.view.leaderboard
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -17,8 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import java.time.Duration
@@ -27,6 +26,7 @@ import java.time.Instant
 @Composable
 fun LeaderboardScreen(viewModel: LeaderboardViewModel, navHostController: NavHostController) {
     val scores by viewModel.scores.observeAsState(listOf())
+    val state by viewModel.state.observeAsState(LeaderboardState.LOADING)
 
     LaunchedEffect(true) {
         viewModel.loadNextPage()
@@ -35,10 +35,31 @@ fun LeaderboardScreen(viewModel: LeaderboardViewModel, navHostController: NavHos
     Surface(color = MaterialTheme.colors.background, modifier = Modifier.fillMaxHeight()) {
         Column {
             Row(modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)) {
-                Text(text = "Leaderboard", style = MaterialTheme.typography.h4, color = MaterialTheme.colors.primary)
+                Text(
+                    text = "Leaderboard",
+                    style = MaterialTheme.typography.h4,
+                    color = MaterialTheme.colors.primary
+                )
             }
-
             LeaderboardHeader()
+            if (scores.isEmpty()) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp, horizontal = 8.dp)
+                ) {
+                    if (state == LeaderboardState.LOADING) {
+                        CircularProgressIndicator(color = MaterialTheme.colors.primary)
+                    }
+                    if (state == LeaderboardState.ERROR) {
+                        Text(text = "Error loading leaderboard scores")
+                    }
+                    if (state == LeaderboardState.SUCCESS) {
+                        Text(text = "No scores")
+                    }
+                }
+            }
             LazyColumn {
                 itemsIndexed(scores) { index, score ->
                     val isOdd = index % 2 == 1
