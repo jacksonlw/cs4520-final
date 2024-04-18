@@ -4,7 +4,7 @@ import androidx.lifecycle.Transformations
 
 class UserRepository(private val userDao: UserDao): UserRepo{
 
-    val recent = userDao.getRecent()
+    override val recent = userDao.getRecent()
 
     override fun add(user: UserEntity) {
         userDao.add(user)

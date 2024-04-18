@@ -14,13 +14,14 @@ import com.cs4520.brainflex.api.ApiClient
 import com.cs4520.brainflex.dao.UserRepository
 import com.cs4520.brainflex.dto.Score
 import com.cs4520.brainflex.workmanager.LeaderboardWorkManager
+import com.cs4520.brainflex.workmanager.LeaderboardWorker
 import com.cs4520.brainflex.workmanager.LogInWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
-class LeaderboardViewModel(private val apiClient: ApiClient) : ViewModel() {
+class LeaderboardViewModel(private val apiClient: ApiClient, private val leaderboardWm: LeaderboardWorkManager) : ViewModel() {
     private var limit = 20
     private var offset = 0
     private var total: Int? = null
@@ -31,7 +32,8 @@ class LeaderboardViewModel(private val apiClient: ApiClient) : ViewModel() {
     private val _state = MutableLiveData<LeaderboardState>(LeaderboardState.LOADING)
     val state: LiveData<LeaderboardState> = _state
 
-    private val wm: WorkManager = LeaderboardWorkManager.worker
+    val wm = leaderboardWm.worker
+
     fun loadNextPage() {
         // Stop if next request will be over total
         if(total != null && offset - limit > total!!) {
@@ -70,7 +72,7 @@ class LeaderboardViewModel(private val apiClient: ApiClient) : ViewModel() {
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-        val periodicWorkRequest = PeriodicWorkRequestBuilder<LogInWorker>(
+        val periodicWorkRequest = PeriodicWorkRequestBuilder<LeaderboardWorker>(
             repeatInterval = 1, // Repeat every hour
             repeatIntervalTimeUnit = TimeUnit.HOURS,
         ).setInitialDelay(1, TimeUnit.HOURS).setConstraints(constraints).build()
