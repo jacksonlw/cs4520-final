@@ -2,7 +2,6 @@ package com.cs4520.brainflex
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.cs4520.brainflex.view.InformationScreen
 import io.mockk.mockk
@@ -21,6 +20,7 @@ class InformationScreenTest {
             InformationScreen(navController = mockk(relaxed = true))
         }
 
-        composeTestRule.onNodeWithText("how to play", substring = true, ignoreCase = true).assertExists("'how to play' must be shown on the information screen")
+        composeTestRule.onNodeWithText("how to play", substring = true, ignoreCase = true)
+            .assertExists("'how to play' must be shown on the information screen")
     }
 }

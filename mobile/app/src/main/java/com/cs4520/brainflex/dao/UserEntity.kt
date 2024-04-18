@@ -3,7 +3,6 @@ package com.cs4520.brainflex.dao
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
-import java.time.OffsetDateTime
 
 @Entity(
     tableName = "users"

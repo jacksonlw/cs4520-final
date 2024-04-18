@@ -3,7 +3,6 @@ package com.cs4520.brainflex.api
 import com.cs4520.brainflex.api.requests.LoginRequestBody
 import com.cs4520.brainflex.api.requests.ScoreRequestBody
 import com.cs4520.brainflex.dto.LeaderboardData
-import com.cs4520.brainflex.dto.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -13,7 +12,10 @@ import retrofit2.http.Query
 
 interface ApiClient {
     @GET("leaderboard")
-    suspend fun getLeaderboard(@Query("limit") limit: Int, @Query("offset") offset: Int): Response<LeaderboardData>
+    suspend fun getLeaderboard(
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): Response<LeaderboardData>
 
     @Headers("Content-Type: application/json")
     @POST("login")

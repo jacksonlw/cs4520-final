@@ -26,16 +26,17 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        LogInWorkManager.worker =  WorkManager.getInstance(this)
-        LeaderboardWorkManager.worker =  WorkManager.getInstance(this)
+        val loginWm = LogInWorkManager(WorkManager.getInstance(this))
+        val leaderboardWm = LeaderboardWorkManager(WorkManager.getInstance(this))
 
         val db = AppDatabase.get(this)
         val userRepo = UserRepository(db.userDao())
         val apiClient = ApiFactory().create()
 
+
         val logInViewModel: LogInViewModel = ViewModelProvider(
             this,
-            factory = LogInViewModelFactory(apiClient, userRepo)
+            factory = LogInViewModelFactory(apiClient, userRepo, loginWm)
         )[LogInViewModel::class.java]
         val gameViewModel: GameViewModel = ViewModelProvider(
             this,
@@ -43,7 +44,7 @@ class MainActivity : ComponentActivity() {
         )[GameViewModel::class.java]
         val leaderboardViewModel = ViewModelProvider(
             this,
-            factory = LeaderboardViewModelFactory(apiClient)
+            factory = LeaderboardViewModelFactory(apiClient, leaderboardWm)
         )[LeaderboardViewModel::class.java]
 
         setContent {

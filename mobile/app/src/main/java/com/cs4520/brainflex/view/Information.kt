@@ -33,20 +33,20 @@ import androidx.navigation.NavController
 @Composable
 fun InformationScreen(
     navController: NavController
-){
-    Surface ( color = MaterialTheme.colors.secondary ) {
-        Column (
+) {
+    Surface(color = MaterialTheme.colors.secondary) {
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal= 20.dp, vertical = 10.dp)
-        ){
+                .padding(horizontal = 20.dp, vertical = 10.dp)
+        ) {
             Title()
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(10.dp)
-            ){
+            ) {
                 HowToPlay()
                 MemorySequenceGame()
                 Spacer(modifier = Modifier.height(20.dp))
@@ -57,8 +57,9 @@ fun InformationScreen(
 }
 
 @Composable
-fun Title(){
-    Text(text = "Sequence Memory Test",
+fun Title() {
+    Text(
+        text = "Sequence Memory Test",
         modifier = Modifier
             .background(
                 color = MaterialTheme.colors.onBackground,
@@ -66,17 +67,20 @@ fun Title(){
             )
             .padding(10.dp)
             .fillMaxWidth(),
-        style = MaterialTheme.typography.subtitle1, color = MaterialTheme.colors.primary)
+        style = MaterialTheme.typography.subtitle1, color = MaterialTheme.colors.primary
+    )
 }
 
 @Composable
-fun HowToPlay(){
-    Column(){
+fun HowToPlay() {
+    Column() {
         Text(text = "How To Play", style = MaterialTheme.typography.caption)
-        Text(text = "1. Memorize the sequence of buttons that light up\n" +
-                "2. Press the buttons in order\n\n" +
-                "The sequence gets longer as you complete each pattern. If you fail to complete the pattern, the test will fail.\n",
-            style = MaterialTheme.typography.caption, modifier= Modifier.padding(0.dp))
+        Text(
+            text = "1. Memorize the sequence of buttons that light up\n" +
+                    "2. Press the buttons in order\n\n" +
+                    "The sequence gets longer as you complete each pattern. If you fail to complete the pattern, the test will fail.\n",
+            style = MaterialTheme.typography.caption, modifier = Modifier.padding(0.dp)
+        )
     }
 }
 
@@ -96,26 +100,37 @@ fun BlinkingCard() {
         )
     }
     Card(
-        modifier = Modifier.size(40.dp).padding(5.dp), backgroundColor = color.value
-    ){}
+        modifier = Modifier
+            .size(40.dp)
+            .padding(5.dp), backgroundColor = color.value
+    ) {}
 }
 
 @Composable
 fun NormalCard() {
-    Card( modifier = Modifier.size(40.dp).padding(5.dp), backgroundColor = (MaterialTheme.colors.background)){}
+    Card(
+        modifier = Modifier
+            .size(40.dp)
+            .padding(5.dp),
+        backgroundColor = (MaterialTheme.colors.background)
+    ) {}
 }
 
 @Composable
 fun MemorySequenceGame() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Observe then Tap:", color=MaterialTheme.colors.primary,
-            fontSize = 12.sp, textAlign = TextAlign.Center)
+        Text(
+            "Observe then Tap:", color = MaterialTheme.colors.primary,
+            fontSize = 12.sp, textAlign = TextAlign.Center
+        )
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
-            modifier = Modifier.height(120.dp).width(120.dp)
+            modifier = Modifier
+                .height(120.dp)
+                .width(120.dp)
         ) {
             items(9) { index ->
-                if(index==4){
+                if (index == 4) {
                     BlinkingCard()
                 } else {
                     NormalCard()
@@ -127,9 +142,10 @@ fun MemorySequenceGame() {
 
 
 @Composable
-fun AdditionalInfo(){
-    Column(){
-        Text(text = "What Does the Test Measure?\nThe Sequence Memory Test measures working memory capacity along with cognitive processing speed and attention. The average score for beginners are around 0-32 while the experts score range from 32-160.",
+fun AdditionalInfo() {
+    Column() {
+        Text(
+            text = "What Does the Test Measure?\nThe Sequence Memory Test measures working memory capacity along with cognitive processing speed and attention. The average score for beginners are around 0-32 while the experts score range from 32-160.",
             modifier = Modifier
                 .background(
                     color = MaterialTheme.colors.onBackground,
@@ -137,7 +153,8 @@ fun AdditionalInfo(){
                 )
                 .padding(10.dp)
                 .fillMaxWidth(),
-            style = MaterialTheme.typography.caption, color = MaterialTheme.colors.primary)
+            style = MaterialTheme.typography.caption, color = MaterialTheme.colors.primary
+        )
     }
 }
 

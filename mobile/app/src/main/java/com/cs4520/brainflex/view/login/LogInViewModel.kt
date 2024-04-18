@@ -12,7 +12,7 @@ import androidx.work.WorkManager
 import com.cs4520.brainflex.api.ApiClient
 import com.cs4520.brainflex.api.requests.LoginRequestBody
 import com.cs4520.brainflex.dao.UserEntity
-import com.cs4520.brainflex.dao.UserRepository
+import com.cs4520.brainflex.dao.UserRepo
 import com.cs4520.brainflex.workmanager.LogInWorkManager
 import com.cs4520.brainflex.workmanager.LogInWorker
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +22,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
-class LogInViewModel(private val apiClient: ApiClient, private val userRepo: UserRepository) : ViewModel() {
+class LogInViewModel(
+    private val apiClient: ApiClient,
+    private val userRepo: UserRepo,
+    loginWm: LogInWorkManager
+) : ViewModel() {
 
     val recentUsernames = Transformations.map(userRepo.recent) { entities ->
         entities.map { it.username }
@@ -30,7 +34,7 @@ class LogInViewModel(private val apiClient: ApiClient, private val userRepo: Use
 
     private val _loginResponseEvent = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
     val loginResponseEvent = _loginResponseEvent.asSharedFlow()
-    private val wm: WorkManager = LogInWorkManager.worker
+    private val wm: WorkManager = loginWm.worker
 
     fun login(username: String) {
         viewModelScope.launch {
