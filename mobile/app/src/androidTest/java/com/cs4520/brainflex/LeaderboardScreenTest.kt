@@ -15,7 +15,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.Instant
-import java.time.LocalDateTime
 
 
 @RunWith(AndroidJUnit4::class)
@@ -63,7 +62,7 @@ class LeaderboardScreenTest {
         )
         state.postValue(LeaderboardState.SUCCESS)
 
-       composeTestRule.waitForIdle()
+        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("user")
             .assertExists("leaderboard must show username")
 

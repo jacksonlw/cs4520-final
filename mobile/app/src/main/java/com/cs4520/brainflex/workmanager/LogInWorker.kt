@@ -9,8 +9,9 @@ import com.cs4520.brainflex.dao.UserRepository
 import java.util.Calendar
 
 
-class LogInWorker(private val context: Context, val params: WorkerParameters) :  CoroutineWorker(context, params) {
-    override suspend fun doWork(): Result  {
+class LogInWorker(private val context: Context, val params: WorkerParameters) :
+    CoroutineWorker(context, params) {
+    override suspend fun doWork(): Result {
         return try {
             val currentTime = Calendar.getInstance().time
             Log.d("doWork", "Timestamp: $currentTime")
@@ -21,7 +22,7 @@ class LogInWorker(private val context: Context, val params: WorkerParameters) : 
                 return if (users.value?.isEmpty() == true) {
                     Result.success()
                 } else {
-                    users.value?.forEach{ item ->
+                    users.value?.forEach { item ->
                         dao.add(item)
                     }
                     Result.success()

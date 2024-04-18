@@ -27,12 +27,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val loginWm = LogInWorkManager(WorkManager.getInstance(this))
-        val leaderboardWm =  LeaderboardWorkManager(WorkManager.getInstance(this))
+        val leaderboardWm = LeaderboardWorkManager(WorkManager.getInstance(this))
 
         val db = AppDatabase.get(this)
         val userRepo = UserRepository(db.userDao())
         val apiClient = ApiFactory().create()
-
 
 
         val logInViewModel: LogInViewModel = ViewModelProvider(

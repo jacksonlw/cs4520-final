@@ -1,8 +1,6 @@
-import java.net.URI
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import androidx.navigation.NavHostController
-import com.cs4520.brainflex.Screen
 import com.cs4520.brainflex.api.ApiClient
 import com.cs4520.brainflex.dao.UserRepo
 import com.cs4520.brainflex.view.game.GameState

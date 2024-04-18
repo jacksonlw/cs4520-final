@@ -9,17 +9,19 @@ import com.cs4520.brainflex.dao.UserEntity
 import com.cs4520.brainflex.dao.UserRepo
 import com.cs4520.brainflex.view.login.LogInViewModel
 import com.cs4520.brainflex.workmanager.LogInWorkManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.empty
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.notNullValue
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import java.time.LocalDateTime
 
@@ -30,7 +32,8 @@ class LoginViewModelTest {
     @Rule
     public val instantExecutor = InstantTaskExecutorRule()
 
-    private lateinit var loginViewModel: LogInViewModel
+
+    private lateinit var viewModel: LogInViewModel
 
     private lateinit var recentUsernamesObserver: Observer<List<String>>
 
@@ -43,6 +46,8 @@ class LoginViewModelTest {
         insertedAt = LocalDateTime.now()
     )
 
+    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
+
     @Before
     fun setup() {
         apiClient = mock(ApiClient::class.java)
@@ -53,19 +58,32 @@ class LoginViewModelTest {
         val wm = mock(WorkManager::class.java)
         val loginWm = LogInWorkManager(wm)
 
-        loginViewModel = LogInViewModel(apiClient, userRepo, loginWm)
+        viewModel = LogInViewModel(apiClient, userRepo, loginWm)
 
         recentUsernamesObserver = mock(Observer::class.java) as Observer<List<String>>
-        loginViewModel.recentUsernames.observeForever(recentUsernamesObserver)
+        viewModel.recentUsernames.observeForever(recentUsernamesObserver)
+
+        Dispatchers.setMain(mainThreadSurrogate)
+    }
+
+    @After
+    fun cleanup() {
+        viewModel.recentUsernames.removeObserver(recentUsernamesObserver)
+        Dispatchers.resetMain()
+        mainThreadSurrogate.close()
     }
 
     @Test
     fun testRecentUsersTransformsToUsernames() {
         recentUsers.value = listOf(user1)
 
-        val usernames = loginViewModel.recentUsernames.value
+        val usernames = viewModel.recentUsernames.value
         assertThat("usernames must not be null", usernames, `is`(notNullValue()))
         assertThat("usernames must have one item", usernames?.size, `is`(equalTo(1)))
-        assertThat("first username in usernames must be 'test'", usernames?.get(0), `is`(equalTo("test")))
+        assertThat(
+            "first username in usernames must be 'test'",
+            usernames?.get(0),
+            `is`(equalTo("test"))
+        )
     }
 }

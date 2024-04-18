@@ -3,7 +3,6 @@ package com.cs4520.brainflex
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.cs4520.brainflex.view.login.LogInScreen
 import com.cs4520.brainflex.view.login.LogInViewModel

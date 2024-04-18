@@ -55,9 +55,12 @@ fun AppNavHost(
         composable(NavigationItem.GAMESTART.route) {
             GameStartScreen(score = null, navController)
         }
-        composable(NavigationItem.GAMESTART.route + "/{score}", arguments = listOf(navArgument("score") {
-            type = NavType.IntType
-        })) {
+        composable(
+            NavigationItem.GAMESTART.route + "/{score}",
+            arguments = listOf(navArgument("score") {
+                type = NavType.IntType
+            })
+        ) {
             GameStartScreen(score = it.arguments?.getInt("score"), navController)
         }
         composable(NavigationItem.GAME.route) {

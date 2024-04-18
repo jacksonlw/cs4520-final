@@ -66,8 +66,8 @@ fun LogInScreen(
     var username by remember { mutableStateOf("") }
 
     LaunchedEffect(true) {
-        viewModel.loginResponseEvent.collect {success ->
-            if(success) {
+        viewModel.loginResponseEvent.collect { success ->
+            if (success) {
                 Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
                 navHostController.navigate(Screen.GAMESTART.name)
             } else {
@@ -84,7 +84,7 @@ fun LogInScreen(
                 .fillMaxSize()
                 .padding(horizontal = 30.dp)
         ) {
-            Row(){
+            Row() {
                 GlideImage(
                     model = R.drawable.ic_launcher_icon,
                     contentDescription = "brain",
@@ -133,7 +133,7 @@ fun LogInScreen(
 
 @Composable
 fun RecentUsers(usernames: List<String>, viewModel: LogInViewModel) {
-    if(usernames.isNotEmpty()) {
+    if (usernames.isNotEmpty()) {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {

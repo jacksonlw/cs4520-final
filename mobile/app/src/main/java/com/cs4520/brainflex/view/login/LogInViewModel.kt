@@ -13,7 +13,6 @@ import com.cs4520.brainflex.api.ApiClient
 import com.cs4520.brainflex.api.requests.LoginRequestBody
 import com.cs4520.brainflex.dao.UserEntity
 import com.cs4520.brainflex.dao.UserRepo
-import com.cs4520.brainflex.dao.UserRepository
 import com.cs4520.brainflex.workmanager.LogInWorkManager
 import com.cs4520.brainflex.workmanager.LogInWorker
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +22,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
-class LogInViewModel(private val apiClient: ApiClient, private val userRepo: UserRepo, loginWm: LogInWorkManager) : ViewModel() {
+class LogInViewModel(
+    private val apiClient: ApiClient,
+    private val userRepo: UserRepo,
+    loginWm: LogInWorkManager
+) : ViewModel() {
 
     val recentUsernames = Transformations.map(userRepo.recent) { entities ->
         entities.map { it.username }
