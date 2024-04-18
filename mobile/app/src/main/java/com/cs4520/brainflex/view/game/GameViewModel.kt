@@ -54,7 +54,6 @@ class GameViewModel(private val apiClient: ApiClient, private val userRepo: User
 
     fun nextStep(cellNumber: Int, navHostController: NavHostController) {
         if (cellNumber == (sequence.value?.get(expectedIndex) ?: Infinity)) {
-            Log.d("AM I HERE", sequence.value?.get(expectedIndex).toString())
 
             // if this is the last digit in the sequence
             if (expectedIndex == (sequence.value?.size?.minus(1) ?: 0)) {
