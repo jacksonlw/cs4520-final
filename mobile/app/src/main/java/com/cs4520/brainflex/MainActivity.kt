@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
         )[GameViewModel::class.java]
         val leaderboardViewModel = ViewModelProvider(
             this,
-            factory = LeaderboardViewModelFactory(apiClient, userRepo)
+            factory = LeaderboardViewModelFactory(apiClient)
         )[LeaderboardViewModel::class.java]
 
         setContent {

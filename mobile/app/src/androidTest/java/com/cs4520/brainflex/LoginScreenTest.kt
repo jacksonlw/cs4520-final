@@ -36,7 +36,7 @@ class LoginScreenTest {
         ).asSharedFlow()
 
         composeTestRule.setContent {
-            LogInScreen(viewModel = viewModel, navHostController = rememberNavController())
+            LogInScreen(viewModel = viewModel, navHostController = mockk(relaxed = true))
         }
     }
 

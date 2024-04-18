@@ -7,12 +7,11 @@ import com.cs4520.brainflex.dao.UserRepository
 
 class LeaderboardViewModelFactory (
     private val apiClient: ApiClient,
-    private val userRepo: UserRepository,
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LeaderboardViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return LeaderboardViewModel(this.apiClient, this.userRepo) as T
+            return LeaderboardViewModel(this.apiClient) as T
         }
         throw IllegalArgumentException("viewModel must be a LeaderboardViewModel")
     }

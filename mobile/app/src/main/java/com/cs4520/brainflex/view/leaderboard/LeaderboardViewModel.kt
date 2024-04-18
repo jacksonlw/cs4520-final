@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
-class LeaderboardViewModel(private val apiClient: ApiClient, private val userRepo: UserRepository) : ViewModel() {
+class LeaderboardViewModel(private val apiClient: ApiClient) : ViewModel() {
     private var limit = 20
     private var offset = 0
     private var total: Int? = null
@@ -28,30 +28,39 @@ class LeaderboardViewModel(private val apiClient: ApiClient, private val userRep
     private val _scores = MutableLiveData<List<Score>>(listOf())
     val scores: LiveData<List<Score>> = _scores
 
+    private val _state = MutableLiveData<LeaderboardState>(LeaderboardState.LOADING)
+    val state: LiveData<LeaderboardState> = _state
+
     private val wm: WorkManager = LeaderboardWorkManager.worker
     fun loadNextPage() {
         // Stop if next request will be over total
         if(total != null && offset - limit > total!!) {
             return
         }
+
+        _state.value = LeaderboardState.LOADING
+
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val res = apiClient.getLeaderboard(limit, offset)
                 if (!res.isSuccessful) {
-                    // show error loading leaderboard
+                    // only show error if there are no items currently loaded
+                    _state.postValue(LeaderboardState.ERROR)
                     return@withContext
                 }
                 val data = res.body()
-                if (data == null) {
-                    // error loading scores
+
+                _state.postValue(LeaderboardState.SUCCESS)
+
+                if(data == null) {
                     return@withContext
                 }
 
-                val newScores = data.scores
-                _scores.postValue(_scores.value.orEmpty() + newScores)
-                schedulePeriodicWork(wm)
+                _scores.postValue(_scores.value.orEmpty() + data.scores)
                 offset += limit
                 total = data.total
+
+                schedulePeriodicWork(wm)
             }
         }
     }
